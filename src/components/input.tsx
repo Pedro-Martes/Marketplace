@@ -12,33 +12,35 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
     const [visiblePassword, setVisiblePassword] = useState(true)
 
     function handleEye() {
-        setVisiblePassword(false)
-
-    }
-    function handleOpenEye() {
         setVisiblePassword(true)
 
     }
+    function handleOpenEye() {
+        setVisiblePassword(false)
+
+    }
     return (
-        <FormControl>
+        <FormControl
+
+
+        >
             <FormControl.ErrorMessage>
                 {errorMessage}
             </FormControl.ErrorMessage>
 
             <HStack
-                backgroundColor={"gray.100"}
-                alignItems={"center"}
-                justifyContent={"center"}
+                backgroundColor={"white"}
+                alignItems={'center'}
                 marginTop={8}
-                paddingRight={4}
+                paddingRight={6}
                 borderRadius={8}
-                
+
 
             >
 
 
                 <NativeInput
-                    bg={"gray.100"}
+                    bg={"white"}
                     borderWidth={0}
                     fontSize={'md'}
                     fontFamily={'body'}
@@ -48,7 +50,7 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
                     _focus={{
                         borderWidth: '1px',
                         borderColor: 'gray.300',
-                        bg: "gray.100"
+                        bg: "white"
                     }}
                     secureTextEntry={visiblePassword}
                     {...rest}
@@ -58,13 +60,13 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
 
                 {type === 'password' ? (visiblePassword ? (
 
-
+                    // Se visiblePassword for true
                     <Button
                         bg={"transparent"}
-
+                        
                         padding={0}
                         _pressed={{ bg: "transparent" }}
-                        onPress={handleEye}>
+                        onPress={handleOpenEye}>
 
                         <Eye color="#7C7C8A" size={20} />
                     </Button>
@@ -83,7 +85,7 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
 
                     </Button>
                 )
-                ) : (<At color="#7C7C8A" size={20} />)}
+                ) : null}
 
 
 

@@ -12,7 +12,7 @@ export const THEME = extendTheme(
                 secondary: '#364D9D',
             },
             gray: {
-
+                primary: '#C4C4CC',
                 700: '#121214',
                 600: '#202024',
                 500: '#29292E',
@@ -22,8 +22,12 @@ export const THEME = extendTheme(
                 100: '#E1E1E6'
 
             },
+
             white: '#ffffff',
-            black: '#000000',
+
+            black: {
+                primary: '#121214'
+            },
         },
         fonts: {
             heading: 'Roboto-700bold',
