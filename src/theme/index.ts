@@ -13,6 +13,8 @@ export const THEME = extendTheme(
             },
             gray: {
                 primary: '#C4C4CC',
+                secondary: '#7C7C8A',
+
                 700: '#121214',
                 600: '#202024',
                 500: '#29292E',
@@ -26,13 +28,16 @@ export const THEME = extendTheme(
             white: '#ffffff',
 
             black: {
-                primary: '#121214'
+                primary: '#121214',
+                secondary: '#202024',
             },
         },
         fonts: {
+            
             heading: 'Roboto-700bold',
             body: 'Roboto_400Regular',
             mono: 'Poppins-Regular',
+            title: 'Montserrat_400Regular'
         }
     }
 

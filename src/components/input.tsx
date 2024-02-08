@@ -31,8 +31,9 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
             <HStack
                 backgroundColor={"white"}
                 alignItems={'center'}
-                marginTop={8}
-                paddingRight={6}
+           
+                mt={3}
+                paddingRight={type =='password' ? 6 : 0}
                 borderRadius={8}
 
 
@@ -63,7 +64,7 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
                     // Se visiblePassword for true
                     <Button
                         bg={"transparent"}
-                        
+
                         padding={0}
                         _pressed={{ bg: "transparent" }}
                         onPress={handleOpenEye}>

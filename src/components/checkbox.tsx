@@ -14,6 +14,12 @@ export function Check({ value, ...rest }: Props) {
         mt={1}
         colorScheme={'blue'}
         size={'md'}
+       _checked={
+        {
+            background: 'blue.primary',
+            borderColor: 'gray.100',
+        }
+       }
         {...rest}
         >
            {value}
