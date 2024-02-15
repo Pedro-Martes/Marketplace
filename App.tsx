@@ -37,6 +37,7 @@ export default function App() {
       <SafeAreaView
         style={{
           flex: 1,
+         
         }}
       >
         {fontsLoaded ?

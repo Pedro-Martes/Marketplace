@@ -14,13 +14,13 @@ export const THEME = extendTheme(
             gray: {
                 primary: '#C4C4CC',
                 secondary: '#7C7C8A',
-
+  
                 700: '#121214',
                 600: '#202024',
                 500: '#29292E',
                 400: '#323238',
                 300: '#7C7C8A',
-                200: '#C4C4CC',
+                200: '#edecee',
                 100: '#E1E1E6'
 
             },
