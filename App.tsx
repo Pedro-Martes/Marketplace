@@ -15,6 +15,7 @@ import { Select } from './src/components/select';
 import { SignIn } from './src/screens/SingIn';
 import { SignUp } from './src/screens/SignUp';
 import { Home } from './src/screens/Home';
+import { Product } from './src/screens/Product';
 
 export default function App() {
 
@@ -41,7 +42,7 @@ export default function App() {
         }}
       >
         {fontsLoaded ?
-          <Home />
+          <Product />
           :
           <>
           </>

@@ -8,7 +8,7 @@ export function Title({ text , ...rest}: Props) {
         <Text
             color={'gray.600'}
             fontWeight={'extrabold'}
-            letterSpacing={'1.3px'}
+            letterSpacing={'1px'}
 
             {...rest}
            
