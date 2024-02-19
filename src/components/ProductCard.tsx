@@ -9,18 +9,19 @@ type ProductCardProps = TouchableOpacityProps & {
 }
 export function ProductCard({ data, ...rest }: ProductCardProps) {
     const ImagemWidth = 153
+    console.log(data);
     return (
         <TouchableOpacity {...rest} >
             <VStack mt={8} w={ImagemWidth} mr={5}>
-                <Image
-                    source={{ uri: data.image }}
+                {/* <Image
+                    source={{ uri: data.image[0].uri }}
                     alt=""
                     w={ImagemWidth}
                     h={100}
                     rounded={'lg'}
                     mr={4}
 
-                />
+                /> */}
 
                 <View background={data.status === 'Novo' ? 'blue.primary' : 'gray.800'} rounded={'full'} w={'30%'} position="absolute" right={0} m={1}>
                     <Subtitle text={`${data.status}`} color={'white'} textAlign={'center'} fontSize={10} />

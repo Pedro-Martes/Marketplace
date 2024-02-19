@@ -34,6 +34,7 @@ export function Product() {
         seller: 'Vinícius Morais',
         status: 'Novo',
         price: 100.90,
+        
         troca: true,
         boleto: true,
         pix: true,
