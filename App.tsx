@@ -17,6 +17,7 @@ import { SignUp } from './src/screens/SignUp';
 import { Home } from './src/screens/Home';
 import { Product } from './src/screens/Product';
 import { MyAdvertisement } from './src/screens/myAdvertisement';
+import { MyProduct } from './src/screens/myProduct';
 
 export default function App() {
 
@@ -43,7 +44,7 @@ export default function App() {
         }}
       >
         {fontsLoaded ?
-          <MyAdvertisement />
+          <MyProduct />
           :
           <>
           </>

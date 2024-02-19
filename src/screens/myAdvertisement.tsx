@@ -1,4 +1,4 @@
-import { Center, CheckIcon, FlatList, HStack, Select, VStack } from "native-base";
+import { Center, CheckIcon, FlatList, HStack, Select, VStack,Text } from "native-base";
 import { Title } from "../components/title";
 import { Check, Plus } from "phosphor-react-native";
 import { TouchableOpacity } from "react-native";
@@ -15,20 +15,9 @@ export function MyAdvertisement(props: MyAdvertisementProps) {
     const Product = [
         {
             id: 1,
-            ImageUri: [{
-                imgId: 1,
-                uri: 'https://source.unsplash.com/random/800x600'
-            },
-            {
-                imgId: 2,
-                uri: 'https://source.unsplash.com/random/800x600'
-            },
-            {
-                imgId: 3,
-                uri: 'https://source.unsplash.com/random/800x600'
-            },
-
-            ],
+            ImageUri: ['https://source.unsplash.com/random/800x600', 
+            'https://source.unsplash.com/random/800x600', 
+            'https://source.unsplash.com/random/800x600'],
             title: 'Tênis Vermelho',
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. A consequuntur cum ducimus possimus. Voluptatum aliquam adipisci labore dignissimos quis saepe illum, molestias excepturi, nesciunt minima quos ratione soluta sequi cum?',
             seller: 'Vinícius Morais',
@@ -44,26 +33,16 @@ export function MyAdvertisement(props: MyAdvertisementProps) {
 
         },
         {
-            id: 1,
-            ImageUri: [{
-                imgId: 1,
-                uri: 'https://source.unsplash.com/random/800x600'
-            },
-            {
-                imgId: 2,
-                uri: 'https://source.unsplash.com/random/800x600'
-            },
-            {
-                imgId: 3,
-                uri: 'https://source.unsplash.com/random/800x600'
-            },
+            id: 2,
+            ImageUri: ['https://source.unsplash.com/random/800x600', 
+            'https://source.unsplash.com/random/800x600', 
+            'https://source.unsplash.com/random/800x600'],
 
-            ],
-            title: 'Tênis Vermelho',
+            title: 'Bicicleta',
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. A consequuntur cum ducimus possimus. Voluptatum aliquam adipisci labore dignissimos quis saepe illum, molestias excepturi, nesciunt minima quos ratione soluta sequi cum?',
-            seller: 'Vinícius Morais',
+            seller: 'Maria Souza',
             status: 'usado',
-            price: 100.90,
+            price: 250.90,
             troca: true,
             boleto: true,
             pix: true,
@@ -94,7 +73,7 @@ export function MyAdvertisement(props: MyAdvertisementProps) {
             </HStack>
 
             <HStack mt={58}>
-                <Subtitle text={`9 anúncios`} flex={1} />
+                <Subtitle text={`${Product.length} anúncios`} flex={1} />
 
 
                 <Select selectedValue={service} minWidth={111} accessibilityLabel="Choose Service" placeholder="Choose Service" _selectedItem={{
@@ -109,17 +88,15 @@ export function MyAdvertisement(props: MyAdvertisementProps) {
 
                 </Select>
             </HStack>
-
+                    
             <FlatList
                 data={Product}
                 keyExtractor={(item) => item.id.toString()}
-                numColumns={2}
+               numColumns={2}
                 renderItem={({ item }) => {
                     return (
                         <>
-                            <ProductCard
-                                product={item}
-                            />
+                         <ProductCard data={item} />
                         </>
                     )
                 }
