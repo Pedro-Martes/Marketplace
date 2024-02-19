@@ -9,8 +9,8 @@ export function Button({ type="blue", ...rest} : Props) {
         <NativeButton
         background={`${type}.primary`}
         borderRadius={6}
+        display={'flex'}
         flexDirection={'row'}
-       
         
         mt={3}
         _text={{
