@@ -29,6 +29,7 @@ export function MyProduct() {
         dinheiro: true,
         deposito: true,
         credito: true,
+        ativo: false,
 
 
     }
@@ -53,6 +54,10 @@ export function MyProduct() {
                 </HStack>
 
                 <Center>
+                    <Text position={'absolute'} color={'white'} zIndex={2} fontWeight={'bold'} fontSize={18} display={product.ativo ? 'none' : 'flex'} >Anúncio pausado</Text>
+                    <View w={'100%'} h={'100%'} position={'absolute'} zIndex={1} bg={'gray.700'} opacity={0.5} display={product.ativo ? 'none' : 'flex'} />
+
+                   
                     <FlatList
                         data={product.ImageUri}
                         keyExtractor={item => item}
@@ -164,18 +169,18 @@ export function MyProduct() {
             <VStack position={'absolute'} alignItems={'center'} background={'white'} w={'100%'} bottom={0} py={3} px={4}>
 
 
-                <HStack background={'gray.700'} alignItems={'center'} justifyContent={'center'} p={1} borderRadius={6} w={'100%'}  >
+                <HStack background={product.ativo ? 'gray.700' : 'blue.primary'} alignItems={'center'} justifyContent={'center'} p={1} borderRadius={6} w={'100%'}   >
 
                     <Power weight="regular" color="#ffff" />
-                    <Button display={'flex'} flexDirection={'row'} mt={0} type="black" >
-                        Desativar anúncio
+                    <Button display={'flex'}  mt={0} type={product.ativo ? 'black' : 'blue'} >
+                    {product.ativo ? 'Desativar anúncio' : 'Ativar anúncio'}
                     </Button>
                 </HStack>
 
                 <HStack background={'gray.primary'} alignItems={'center'} justifyContent={'center'} p={1} borderRadius={6} mt={2} w={'100%'}  >
 
                     <Trash weight="regular" color="#000" />
-                    <Button display={'flex'} flexDirection={'row'} mt={0} type="gray" >
+                    <Button display={'flex'}  mt={0} type="gray" >
                         Excluir anúncio
                     </Button>
                 </HStack>
