@@ -21,7 +21,7 @@ export function Radio({ name, valueList, ...rest }: Props) {
                     borderColor: 'blue.primary',
                     
                 }}
-                
+               
                 >
                     {item}
                 </NativeRadio>
