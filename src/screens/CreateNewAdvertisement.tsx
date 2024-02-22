@@ -11,7 +11,7 @@ interface CreateNewAddProps {
 export default function CreateNewAd(props: CreateNewAddProps) {
     const PHOTO_SIZE = 100
 
-    const ProductImages = ['https://source.unsplash.com/random/802x602', 'https://source.unsplash.com/random/802x602', 'add']
+    const ProductImages = ['https://source.unsplash.com/random/802x602',  'add']
 
     return (
         <VStack bg={'gray.200'} flex={1} px={6}>
