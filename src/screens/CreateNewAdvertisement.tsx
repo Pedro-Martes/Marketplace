@@ -1,7 +1,7 @@
 import { HStack, Text, VStack, Image, FlatList } from "native-base";
 import { ArrowLeft, ArrowRight, Plus } from "phosphor-react-native";
 import { Title } from "../components/title";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { Subtitle } from "../components/subtitle";
 import { Button } from "../components/button";
 
@@ -10,8 +10,8 @@ interface CreateNewAddProps {
 }
 export default function CreateNewAd(props: CreateNewAddProps) {
     const PHOTO_SIZE = 100
-    
-    const ProductImages = ['https://source.unsplash.com/random/801x601', 'https://source.unsplash.com/random/802x602']
+
+    const ProductImages = ['https://source.unsplash.com/random/802x602', 'https://source.unsplash.com/random/802x602', 'add']
 
     return (
         <VStack bg={'gray.200'} flex={1} px={6}>
@@ -32,35 +32,45 @@ export default function CreateNewAd(props: CreateNewAddProps) {
                     data={ProductImages}
                     keyExtractor={(item) => item}
                     numColumns={3}
+                    mr={1.5}
+
                     renderItem={({ item }) => (
-                        <>
-                            <Image
-                                source={{ uri: item }}
-                                alt=''
-                                w={PHOTO_SIZE}
-                                h={PHOTO_SIZE}
-                                rounded={6}
-                                mr={1.5}
-                            />
+                        item !== 'add' ?
+                            <>
+                                <Image
+                                    source={{ uri: item }}
+                                    alt=''
+                                    w={PHOTO_SIZE}
+                                    h={PHOTO_SIZE}
+                                    rounded={6}
+                                    mr={1.5}
+                                />
 
-                        </>
+                            </>
+                            : <>
+                                {
+                                    ProductImages.length < 4 ?
+
+
+                                        <Button
+                                            w={PHOTO_SIZE}
+                                            h={PHOTO_SIZE}
+                                            mt={0}
+                                            type="gray"
+
+
+                                        >
+                                            <Plus color="#888889" />
+                                        </Button>
+
+                                        : null
+                                }
+                            </>
                     )}
-
+                    contentContainerStyle={{ flexGrow: 1, }}
                 />
 
-                {
-                    ProductImages.length < 3 ?
-                        <Button
-                            w={PHOTO_SIZE}
-                            h={PHOTO_SIZE}
-                            mt={0}
-                            type="gray"
 
-                        >
-                            <Plus color="#888889" />
-                        </Button>
-                        : null
-                }
 
 
 
