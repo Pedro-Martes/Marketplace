@@ -32,7 +32,7 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
                 backgroundColor={"white"}
                 alignItems={'center'}
            
-                mt={3}
+                
                 paddingRight={type =='password' ? 6 : 0}
                 borderRadius={8}
 

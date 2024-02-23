@@ -6,6 +6,8 @@ import { Subtitle } from "../components/subtitle";
 import { Button } from "../components/button";
 import { Input } from "../components/input";
 import { useState } from "react";
+import { Switch } from "../components/switch";
+import { Check } from "../components/checkbox";
 
 interface CreateNewAddProps {
 
@@ -89,11 +91,14 @@ export default function CreateNewAd(props: CreateNewAddProps) {
 
                 <Title text="Sobre o Produto" mt={'32px'} />
                 <Input placeholder="Título do anúncio" />
+
+                  {/* ⬇ TextArea Input ⬇ */}
                 <TextArea
                     autoCompleteType={false}
                     placeholder="Descrição completa do produto (opcional)"
                     mt={3}
                     backgroundColor={'white'}
+                    borderWidth={0}
                     fontSize={'md'}
                     fontFamily={'body'}
                     placeholderTextColor={'gray.300'}
@@ -104,14 +109,16 @@ export default function CreateNewAd(props: CreateNewAddProps) {
                     }}
                 />
 
+                {/* ⬇ Radio Buttons ⬇ */}
                 <Radio.Group
                     name="Status"
                     value={status}
                     flex={1}
-                   
+
                     onChange={NextValue => {
                         setStatus(NextValue)
                     }}>
+
 
                     <HStack>
                         <Radio
@@ -130,12 +137,13 @@ export default function CreateNewAd(props: CreateNewAddProps) {
                             }}
 
                         >
-                            Produto Novo
+                            <Text mt={3} color={'gray.400'} fontSize={16} fontFamily={'body'} mr={'20px'}>Produto Novo</Text>
                         </Radio>
 
                         <Radio
                             value="Usado"
                             mt={3}
+                            alignItems={'center'}
                             _text={{ color: 'gray.500' }}
                             _icon={{
                                 color: 'blue.primary',
@@ -150,12 +158,26 @@ export default function CreateNewAd(props: CreateNewAddProps) {
 
                         >
 
-                            Produto  Usado
+                            <Text mt={3} color={'gray.400'} fontSize={16} fontFamily={'body'} >Produto Usado</Text>
 
                         </Radio>
 
                     </HStack>
                 </Radio.Group>
+
+                <Title text="Vendas" mt={'32px'}/>     
+                <HStack background={'white'} rounded={10} alignItems={'center'}  px={5}>
+                    <Title text="R$" fontWeight={'hairline'} mt={0}/>
+                    <Input placeholder="Valor do produto"  mt={0}  />
+                    
+                </HStack>
+
+                <Title text="Aceita troca?" />
+                <Switch />
+
+                <Title text="Meios de pagamento aceitos" />
+                <Check value="Boleto" />
+
 
 
             </VStack >
