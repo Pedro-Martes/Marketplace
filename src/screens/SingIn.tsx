@@ -11,7 +11,7 @@ interface SignInProps {
 export function SignIn(props: SignInProps) {
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-            <VStack flex={1} px={5} backgroundColor={'gray.100'}  borderBottomRadius={24}>
+            <VStack flex={1} px={8} backgroundColor={'gray.100'}  borderBottomRadius={24}>
 
                 <Center >
 
@@ -25,11 +25,11 @@ export function SignIn(props: SignInProps) {
                     <Title text="BARGANHA" fontSize={'3xl'} color={'blue.primary'} fontFamily={'title'} />
                     <Subtitle text="Seu espaço de compra e venda" />
                 
-                <Title text="Sua Conta" fontFamily={'body'} mt={20}/>
+                <Title text="Sua Conta" fontFamily={'body'} mt={20} mb={8}/>
 
                 <Input placeholder="Email" />
-                <Input type="password" placeholder="Senha" />
-                <Button text="Entrar"  />
+                <Input type="password" placeholder="Senha" mt={8}/>
+                <Button w={'100%'}> Entrar</Button>
 
 
                 </Center>
@@ -37,7 +37,7 @@ export function SignIn(props: SignInProps) {
             <VStack paddingY={16} paddingX={5}>
                 <Center>
                     <Subtitle text="Não tem uma conta? " />
-                    <Button text="Criar conta" type="gray"  />
+                    <Button type="gray" w={'100%'} > Criar conta</Button>
                 </Center>
             </VStack>
 

@@ -19,6 +19,8 @@ import { Product } from './src/screens/Product';
 import { MyAdvertisement } from './src/screens/myAdvertisement';
 import { MyProduct } from './src/screens/myProduct';
 import CreateNewAd from './src/screens/CreateNewAdvertisement';
+import { ProductPreview } from './src/screens/preview';
+import { Routes } from './src/routes';
 
 export default function App() {
 
@@ -45,7 +47,7 @@ export default function App() {
         }}
       >
         {fontsLoaded ?
-          <CreateNewAd />
+          <Routes />
           :
           <>
           </>

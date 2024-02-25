@@ -68,7 +68,7 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
                         padding={0}
                         _pressed={{ bg: "transparent" }}
                         onPress={handleOpenEye}>
-
+                                                                         
                         <Eye color="#7C7C8A" size={20} />
                     </Button>
 

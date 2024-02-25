@@ -8,6 +8,7 @@ import { Input } from "../components/input";
 import { useState } from "react";
 import { Switch } from "../components/switch";
 import { Check } from "../components/checkbox";
+import ToggleSwitch, { ToggleSwitchProps } from "toggle-switch-react-native"
 
 interface CreateNewAddProps {
 
@@ -17,6 +18,7 @@ export default function CreateNewAd(props: CreateNewAddProps) {
 
     const ProductImages = ['https://source.unsplash.com/random/802x602', 'add']
     const [status, setStatus] = useState('Novo')
+    const [trade, setTrade] = useState(false);
 
     return (
         <ScrollView bg={'gray.200'} flex={1}>
@@ -92,7 +94,7 @@ export default function CreateNewAd(props: CreateNewAddProps) {
                 <Title text="Sobre o Produto" mt={'32px'} />
                 <Input placeholder="Título do anúncio" />
 
-                  {/* ⬇ TextArea Input ⬇ */}
+                {/* ⬇ TextArea Input ⬇ */}
                 <TextArea
                     autoCompleteType={false}
                     placeholder="Descrição completa do produto (opcional)"
@@ -165,22 +167,39 @@ export default function CreateNewAd(props: CreateNewAddProps) {
                     </HStack>
                 </Radio.Group>
 
-                <Title text="Vendas" mt={'32px'}/>     
-                <HStack background={'white'} rounded={10} alignItems={'center'}  px={5}>
-                    <Title text="R$" fontWeight={'hairline'} mt={0}/>
-                    <Input placeholder="Valor do produto"  mt={0}  />
-                    
+                <Title text="Venda" mt={'32px'} />
+                <HStack background={'white'} rounded={10} alignItems={'center'} px={5} mt={3}>
+                    <Title text="R$" fontWeight={'hairline'} mt={0} />
+                    <Input placeholder="Valor do produto" mt={0} />
+
                 </HStack>
 
-                <Title text="Aceita troca?" />
-                <Switch />
+                <Title text="Aceita troca?" mt={3} mb={3} />
 
-                <Title text="Meios de pagamento aceitos" />
-                <Check value="Boleto" />
+                <ToggleSwitch
+                    isOn={trade}
+                    onColor={'#647AC7'}
+                    offColor={'#d9d8da'}
+                    onToggle={isOn => setTrade(isOn)}
+                    animationSpeed={200}
 
+
+                />
+
+                <Title text="Meios de pagamento aceitos" mt={3} />
+                <Check value="Boleto" mt={3} />
+                <Check value="Pix" mt={3} />
+                <Check value="Dinheiro" mt={3} />
+                <Check value="Cartão de Crédito" mt={3} />
+                <Check value="Boleto" mt={3} />
 
 
             </VStack >
+            <HStack background={'white'} flex={1} py={6} justifyContent={'center'}>
+                <Button type="gray" mr={6} mt={0}  py={3} px={12}>Cancelar</Button>
+                <Button type="black" mt={0}  py={3} px={12} >Avançar</Button>
+
+            </HStack>
         </ScrollView>
     )
 }
