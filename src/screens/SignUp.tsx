@@ -8,11 +8,18 @@ import { Button } from "../components/button";
 import { UserImage } from "../components/userImage";
 import { useState } from "react";
 import { PencilSimple } from "phosphor-react-native";
+import { useNavigation } from "@react-navigation/native";
 
 
 export function SignUp() {
     const PHOTO_SIZE = 88
     const [uriAvatar, setUriAvatar] = useState('')
+
+    const navigator =  useNavigation()
+
+    function handleGoBack(){
+        navigator.goBack()
+    }
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
             <VStack flex={1} px={5} backgroundColor={'gray.100'}>
@@ -41,7 +48,7 @@ export function SignUp() {
                             h={PHOTO_SIZE}
                         />
 
-                        <Button  rounded={'full'} h={10} position={'absolute'} ml={PHOTO_SIZE}  >
+                        <Button  rounded={'full'} h={10} position={'absolute'} ml={PHOTO_SIZE- 7} bottom={4}  >
                             <PencilSimple color="white" size={16} />
                         </Button>
 
@@ -52,10 +59,10 @@ export function SignUp() {
                     <Input placeholder="Telefone" keyboardType="number-pad"/>
                     <Input type="password" placeholder="Senha" />
                     <Input type="password" placeholder="Confirmar senha" />
-                    <Button w={'100%'} mt={6} type="black" >Criar</Button>
+                    <Button w={'100%'}  type="black" >Criar</Button>
                     
                     <Subtitle text="Já tem uma conta?"  mt={12}/>
-                    <Button w={'100%'} type="gray"  mb={8}>Ir para login</Button>
+                    <Button w={'100%'} type="gray"  mb={8} onPress={handleGoBack}>Ir para login</Button>
 
 
                 </Center>

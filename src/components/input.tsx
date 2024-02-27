@@ -21,8 +21,7 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
     }
     return (
         <FormControl
-
-
+            mb={3}
         >
             <FormControl.ErrorMessage>
                 {errorMessage}
@@ -31,11 +30,8 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
             <HStack
                 backgroundColor={"white"}
                 alignItems={'center'}
-           
-                
-                paddingRight={type =='password' ? 6 : 0}
+                paddingRight={type == 'password' ? 6 : 0}
                 borderRadius={8}
-
 
             >
 
@@ -68,7 +64,7 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
                         padding={0}
                         _pressed={{ bg: "transparent" }}
                         onPress={handleOpenEye}>
-                                                                         
+
                         <Eye color="#7C7C8A" size={20} />
                     </Button>
 
