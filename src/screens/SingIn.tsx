@@ -35,7 +35,7 @@ export function SignIn() {
 
                 <Input placeholder="Email"  />
                 <Input type="password" placeholder="Senha" />
-                <Button w={'100%'}> Entrar</Button>
+                <Button w={'100%' } mb={8} > Entrar</Button>
 
 
                 </Center>

@@ -11,9 +11,12 @@
   "dependencies": {
     "@expo-google-fonts/montserrat": "^0.2.3",
     "@expo-google-fonts/roboto": "^0.2.3",
+    "@react-navigation/bottom-tabs": "^6.5.14",
     "@react-navigation/native": "^6.1.12",
     "@react-navigation/native-stack": "^6.9.20",
     "expo": "~49.0.15",
+    "expo-file-system": "~15.4.5",
+    "expo-image-picker": "~14.3.2",
     "expo-status-bar": "~1.6.0",
     "native-base": "^3.4.28",
     "phosphor-react-native": "^2.0.0",
