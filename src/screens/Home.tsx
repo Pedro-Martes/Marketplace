@@ -113,7 +113,7 @@ export function Home(props: HomeProps) {
                     </HStack>
                 </VStack>
               
-
+{/* 
                     <FlatList
                         data={Products}
                         keyExtractor={(item) => item.id.toString()}
@@ -131,7 +131,7 @@ export function Home(props: HomeProps) {
                         _contentContainerStyle={{
                           paddingBottom: 20
                         }}
-                    />
+                    /> */}
 
            
 
