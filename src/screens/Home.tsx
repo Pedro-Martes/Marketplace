@@ -7,43 +7,62 @@ import { Subtitle } from "../components/subtitle";
 import { Button } from "../components/button";
 import { ArrowFatLineRight, ArrowRight, MagnifyingGlass, Plus, Sliders, Tag } from "phosphor-react-native";
 import { ProductCard } from "../components/ProductCard";
+import { useNavigation } from "@react-navigation/native";
+import { AppNavigatorRoutesProps } from "../routes/app.routes";
 
 
-interface HomeProps {
 
-}
-export function Home(props: HomeProps) {
+export function Home() {
+    const navigation = useNavigation<AppNavigatorRoutesProps>()
     const PHOTO_SIZE = 45
+
     const Products = [
         {
             id: 1,
-            title: "Tenis Vermelho",
-            price: 89.50,
-            image: 'https://source.unsplash.com/random/800x600',
-            description: "Lorem ipsum dolor sit amet, consec laborum.",
-            status: "Novo",
-            seller: 'Vini'
-        },
-        {
-            id: 2,
-            title: "Bicicleta",
-            price: 120.00,
-            image: 'https://images.unsplash.com/photo-1705599773334-b73b8f707101?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=600&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTcwODEwNjc0Mw&ixlib=rb-4.0.3&q=80&w=800',
-            description: "Lorem ipsum dolor sit amet, consec laborum.",
-            status: "Novo",
-            seller: 'Bia',
+            ImageUri: ['https://source.unsplash.com/random/800x600', 
+            'https://source.unsplash.com/random/800x600', 
+            'https://source.unsplash.com/random/800x600'],
+            title: 'Tênis Vermelho',
+            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. A consequuntur cum ducimus possimus. Voluptatum aliquam adipisci labore dignissimos quis saepe illum, molestias excepturi, nesciunt minima quos ratione soluta sequi cum?',
+            seller: 'Vinícius Morais',
+            status: 'Novo',
+            price: 100.90,
+            troca: true,
+            boleto: true,
+            pix: true,
+            dinheiro: true,
+            deposito: true,
+            credito: true,
+            ativo: false,
 
         },
         {
-            id: 3,
-            title: "Televisão 49'",
-            price: 1500,
-            image: "https://source.unsplash.com/random/800x600",
-            description: "Lorem ipsum dolor sit amet, consec laborum.",
-            status: "Usado",
-            seller: 'Marcos'
-        },
+            id: 2,
+            ImageUri: ['https://source.unsplash.com/random/800x600', 
+            'https://source.unsplash.com/random/800x600', 
+            'https://source.unsplash.com/random/800x600'],
+
+            title: 'Bicicleta',
+            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. A consequuntur cum ducimus possimus. Voluptatum aliquam adipisci labore dignissimos quis saepe illum, molestias excepturi, nesciunt minima quos ratione soluta sequi cum?',
+            seller: 'Maria Souza',
+            status: 'usado',
+            price: 250.90,
+            troca: true,
+            boleto: true,
+            pix: true,
+            dinheiro: true,
+            deposito: true,
+            credito: true,
+            ativo: true,
+
+
+        }
     ]
+
+function handleNewAd(){
+    console.log('objects.handleNewAd()');
+    navigation.navigate('CreateNewAd');
+}
 
 
     return (
@@ -63,7 +82,7 @@ export function Home(props: HomeProps) {
 
 
                     </VStack>
-                    <Button type="black" >
+                    <Button type="black" onPress={handleNewAd}>
                         <VStack>
 
                             <Title text="+ Criar Anúncio" color={'white'} fontSize={12} />
@@ -113,7 +132,7 @@ export function Home(props: HomeProps) {
                     </HStack>
                 </VStack>
               
-{/* 
+
                     <FlatList
                         data={Products}
                         keyExtractor={(item) => item.id.toString()}
@@ -131,7 +150,7 @@ export function Home(props: HomeProps) {
                         _contentContainerStyle={{
                           paddingBottom: 20
                         }}
-                    /> */}
+                    /> 
 
            
 

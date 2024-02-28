@@ -10,10 +10,8 @@ import { Switch } from "../components/switch";
 import { Check } from "../components/checkbox";
 import ToggleSwitch, { ToggleSwitchProps } from "toggle-switch-react-native"
 
-interface CreateNewAddProps {
 
-}
-export default function CreateNewAd(props: CreateNewAddProps) {
+export default function CreateNewAdvertisement() {
     const PHOTO_SIZE = 100
 
     const ProductImages = ['https://source.unsplash.com/random/802x602', 'add']
