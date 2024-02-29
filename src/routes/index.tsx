@@ -10,8 +10,8 @@ export function Routes() {
         <Box flex={1} bg={'gray.200'}>
 
             <NavigationContainer >
-                <AppRoutes />
-                {/* <AuthRoutes /> */}
+                 <AuthRoutes /> 
+            
             </NavigationContainer>
         </Box>
     )

@@ -49,7 +49,7 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
                         borderColor: 'gray.300',
                         bg: "white"
                     }}
-                    secureTextEntry={visiblePassword}
+                    secureTextEntry={type === 'password' ? visiblePassword : false}
                     {...rest}
 
                 />
@@ -60,7 +60,7 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
                     // Se visiblePassword for true
                     <Button
                         bg={"transparent"}
-
+                        h={'100%'}
                         padding={0}
                         _pressed={{ bg: "transparent" }}
                         onPress={handleOpenEye}>
