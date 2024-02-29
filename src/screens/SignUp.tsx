@@ -93,8 +93,8 @@ export function SignUp() {
         }
     }
 
-    function handleSubmitSingUp({ photo, confirmPassword, password, email, name, tel }: FormDataProps) {
-        console.log(name);
+    function handleSubmitSingUp() {
+        console.log('name');
     }
 
     return (
@@ -147,19 +147,79 @@ export function SignUp() {
                         )}
                     />
 
+                    <Controller
+                        control={control}
+                        name="email"
+                        render={({ field: { onChange, value } }) => (
 
-                    <Input placeholder="Email" keyboardType="email-address" />
-                    <Input placeholder="Telefone" keyboardType="number-pad" />
-                    <Input type="password" placeholder="Senha" />
-                    <Input type="password" placeholder="Confirmar senha" />
+                            <Input
+                                placeholder="Email"
+                                onChange={onChange}
+                                value={value}
+                                isRequired
+                                errorMessage={errors.email?.message}
+                                keyboardType="email-address"
+                            />
+                        )}
+                    />
+
+                    <Controller
+                        control={control}
+                        name="tel"
+                        render={({ field: { onChange, value } }) => (
+
+                            <Input
+                                placeholder="Telefone"
+                                onChange={onChange}
+                                value={value}
+                                isRequired
+                                errorMessage={errors.tel?.message}
+                                keyboardType="number-pad"
+                            />
+                        )}
+                    />
+
+                    <Controller
+                        control={control}
+                        name="password"
+                        render={({ field: { onChange, value } }) => (
+
+                            <Input
+                                placeholder="Senha"
+                                onChange={onChange}
+                                value={value}
+                                isRequired
+                                errorMessage={errors.password?.message}
+                                type="password"
+                            />
+                        )}
+                    />
+
+                    <Controller
+                        control={control}
+                        name="confirmPassword"
+                        render={({ field: { onChange, value } }) => (
+
+                            <Input
+                                placeholder="Confirmar Senha"
+                                onChange={onChange}
+                                value={value}
+                                isRequired
+                                errorMessage={errors.confirmPassword?.message}
+                                type="password"
+                            
+                            />
+                        )}
+                    />
+
 
                     <Button
                         w={'100%'}
                         type="black"
-                        isLoading = {isLoading}
+                        isLoading={isLoading}
                         onPress={handleSubmit(handleSubmitSingUp)}
 
-                        
+
                     >
                         Criar
                     </Button>
