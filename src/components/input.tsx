@@ -1,5 +1,5 @@
 import { Button, Center, FormControl, HStack, IInputProps, Input as NativeInput } from "native-base";
-import { At, Eye, EyeClosed } from "phosphor-react-native";
+import {  Eye, EyeClosed } from "phosphor-react-native";
 import { useState } from "react";
 
 type Props = IInputProps & {
@@ -10,6 +10,7 @@ type Props = IInputProps & {
 export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }: Props) {
 
     const [visiblePassword, setVisiblePassword] = useState(true)
+    const invalid = !!errorMessage || isInvalid;
 
     function handleEye() {
         setVisiblePassword(true)
@@ -20,10 +21,8 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
 
     }
     return (
-        <FormControl
-            mb={3}
-        >
-            <FormControl.ErrorMessage>
+        <FormControl isInvalid= {invalid} mb={3} >
+            <FormControl.ErrorMessage _text={{color: 'red.500'}}>
                 {errorMessage}
             </FormControl.ErrorMessage>
 
@@ -48,6 +47,11 @@ export function Input({ errorMessage = null, type = 'text', isInvalid, ...rest }
                         borderWidth: '1px',
                         borderColor: 'gray.300',
                         bg: "white"
+                    }}
+                    isInvalid= {invalid}
+                    _invalid={{
+                        borderWidth: 1,
+                        borderColor:'red.500'
                     }}
                     secureTextEntry={type === 'password' ? visiblePassword : false}
                     {...rest}

@@ -30,7 +30,7 @@ export const THEME = extendTheme(
 
             black: {
                 primary: '#121214',
-                secondary: '#202024',
+                secondary: '#7C7C8A',
             },
         },
         fonts: {

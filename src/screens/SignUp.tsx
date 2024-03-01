@@ -14,6 +14,8 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from "expo-file-system";
 import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup";
+import { AppError } from "../utils/AppError";
+import { api } from "../services/api";
 
 type FormDataProps = {
     name: string;
@@ -21,7 +23,7 @@ type FormDataProps = {
     password: string;
     confirmPassword: string;
     tel: string;
-    photo: string;
+    
 }
 
 const signUpSchema = yup.object({
@@ -30,7 +32,7 @@ const signUpSchema = yup.object({
     password: yup.string().required('Digite uma senha valida').min(6, 'Senha dee ter no mínimo 6 caracteres'),
     confirmPassword: yup.string().required('Digite a senha valida').oneOf([yup.ref('password')], 'A confirmação da senha não confere'),
     tel: yup.string().required('Telefone obrigatório'),
-    photo: yup.string().required('Foto obrigatória'),
+   
 })
 
 export function SignUp() {
@@ -39,6 +41,7 @@ export function SignUp() {
     const [userPhoto, setUserPhoto] = useState(`https://avatars.githubusercontent.com/u/38743714?v=4`)
     const [photoIsLoading, setPhotoIsLoading] = useState<Boolean>()
     const [isLoading, setIsLoading] = useState(false)
+    const [Avatar, setAvatar] = useState<any>()
     const toast = useToast()
 
     const navigator = useNavigation()
@@ -54,8 +57,6 @@ export function SignUp() {
     async function handleUserPhotoSelect() {
         setPhotoIsLoading(true)
         try {
-
-
             const photoSelected = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
@@ -80,6 +81,11 @@ export function SignUp() {
                     })
                 } else {
                     setUserPhoto(photoSelected.assets[0].uri)
+                    setAvatar({
+                        name: `${photoSelected.assets[0].fileName}`,
+                        uri: `${photoSelected.assets[0].uri}`,
+                        type: `${photoSelected.assets[0].type}`
+                    } as any);
                 }
 
             }
@@ -93,8 +99,27 @@ export function SignUp() {
         }
     }
 
-    function handleSubmitSingUp() {
-        console.log('name');
+    async function handleSubmitSingUp({name, email, tel, password, confirmPassword, }: FormDataProps) {
+
+        try {
+            setIsLoading(true)
+            await  api.post('/users', {Avatar, name, email, tel, password }, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+
+        } catch (error) {
+            const isAppError = error instanceof AppError;
+            const title =  isAppError ?  errors.name?.message : 'Erro não especificado.'
+            console.log(title);
+            toast.show({
+             title: title,
+             placement: 'top',
+             bgColor: 'red.500'
+            })
+        }
+
     }
 
     return (
@@ -130,7 +155,7 @@ export function SignUp() {
                         </Button>
 
                     </HStack>
-
+                       
                     <Controller
                         control={control}
                         name="name"
@@ -139,7 +164,7 @@ export function SignUp() {
 
                             <Input
                                 placeholder="Nome"
-                                onChange={onChange}
+                                onChangeText={onChange}
                                 value={value}
                                 isRequired
                                 errorMessage={errors.name?.message}
@@ -154,7 +179,7 @@ export function SignUp() {
 
                             <Input
                                 placeholder="Email"
-                                onChange={onChange}
+                                onChangeText={onChange}
                                 value={value}
                                 isRequired
                                 errorMessage={errors.email?.message}
@@ -170,7 +195,7 @@ export function SignUp() {
 
                             <Input
                                 placeholder="Telefone"
-                                onChange={onChange}
+                                onChangeText={onChange}
                                 value={value}
                                 isRequired
                                 errorMessage={errors.tel?.message}
@@ -186,7 +211,7 @@ export function SignUp() {
 
                             <Input
                                 placeholder="Senha"
-                                onChange={onChange}
+                                onChangeText={onChange}
                                 value={value}
                                 isRequired
                                 errorMessage={errors.password?.message}
@@ -202,7 +227,7 @@ export function SignUp() {
 
                             <Input
                                 placeholder="Confirmar Senha"
-                                onChange={onChange}
+                                onChangeText={onChange}
                                 value={value}
                                 isRequired
                                 errorMessage={errors.confirmPassword?.message}
