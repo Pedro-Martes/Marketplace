@@ -23,7 +23,7 @@ type FormDataProps = {
     password: string;
     confirmPassword: string;
     tel: string;
-    
+
 }
 
 const signUpSchema = yup.object({
@@ -32,7 +32,7 @@ const signUpSchema = yup.object({
     password: yup.string().required('Digite uma senha valida').min(6, 'Senha dee ter no mínimo 6 caracteres'),
     confirmPassword: yup.string().required('Digite a senha valida').oneOf([yup.ref('password')], 'A confirmação da senha não confere'),
     tel: yup.string().required('Telefone obrigatório'),
-   
+
 })
 
 export function SignUp() {
@@ -80,12 +80,16 @@ export function SignUp() {
                         duration: 5000,
                     })
                 } else {
+
                     setUserPhoto(photoSelected.assets[0].uri)
-                    setAvatar({
+                    const fileExtension = photoSelected.assets[0].uri.split('.').pop();
+                    const AvatarFile = {
                         name: `${photoSelected.assets[0].fileName}`,
                         uri: `${photoSelected.assets[0].uri}`,
-                        type: `${photoSelected.assets[0].type}`
-                    } as any);
+                        type: `${photoSelected.assets[0].type}/${fileExtension}`
+                    } as any
+                        console.log(AvatarFile);
+                    setAvatar(AvatarFile)
                 }
 
             }
@@ -99,25 +103,44 @@ export function SignUp() {
         }
     }
 
-    async function handleSubmitSingUp({name, email, tel, password, confirmPassword, }: FormDataProps) {
-
+    async function handleSubmitSingUp({ name, email, tel, password, confirmPassword, }: FormDataProps) {
+        setIsLoading(true)
+         
         try {
-            setIsLoading(true)
-            await  api.post('/users', {Avatar, name, email, tel, password }, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
+            const formData = new FormData();
+            formData.append('avatar', Avatar);
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('tel', tel);
+            formData.append('password', password);
 
-        } catch (error) {
-            const isAppError = error instanceof AppError;
-            const title =  isAppError ?  errors.name?.message : 'Erro não especificado.'
-            console.log(title);
+
+
+            await api.post('/users', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            }
+            )
             toast.show({
-             title: title,
-             placement: 'top',
-             bgColor: 'red.500'
+                title: 'Usuário criado com sucesso',
+                bgColor: 'green.500',
+                placement: 'top',
+                duration: 5000,
             })
+        }
+
+        catch (error) {
+            const isAppError = error instanceof AppError;
+            const title = isAppError ? isAppError : 'Houve um erro de comunicação com servidor. Tente novamente mais tarde'
+            console.log(error);
+            toast.show({
+                title: title,
+                placement: 'top',
+                bgColor: 'red.500'
+            })
+        } finally {
+            setIsLoading(false);
         }
 
     }
@@ -155,7 +178,7 @@ export function SignUp() {
                         </Button>
 
                     </HStack>
-                       
+
                     <Controller
                         control={control}
                         name="name"
@@ -232,7 +255,7 @@ export function SignUp() {
                                 isRequired
                                 errorMessage={errors.confirmPassword?.message}
                                 type="password"
-                            
+
                             />
                         )}
                     />
