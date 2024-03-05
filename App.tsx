@@ -21,6 +21,7 @@ import { MyProduct } from './src/screens/myProduct';
 import CreateNewAd from './src/screens/CreateNewAdvertisement';
 import { ProductPreview } from './src/screens/preview';
 import { Routes } from './src/routes';
+import { AuthContext } from './src/context/AuthContex';
 
 export default function App() {
 
@@ -28,7 +29,7 @@ export default function App() {
     Roboto_400Regular,
     Roboto_700Bold,
     Montserrat_400Regular
-    
+
   })
 
   return (
@@ -43,15 +44,22 @@ export default function App() {
       <SafeAreaView
         style={{
           flex: 1,
-         
+
         }}
       >
-        {fontsLoaded ?
-          <Routes />
-          :
-          <>
-          </>
-        }
+        <AuthContext.Provider value={{
+          id: 1,
+          name: 'pedro',
+          avatar: 'https://img.freepik.com/free-vector/man-avatar-silhouette_23-2148850593.jpg?size=338&ext=jpg'
+        }}>
+          {fontsLoaded ?
+
+            <Routes />
+            :
+            <>
+            </>
+          }
+        </AuthContext.Provider>
 
       </SafeAreaView>
 
