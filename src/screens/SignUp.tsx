@@ -83,12 +83,14 @@ export function SignUp() {
 
                     setUserPhoto(photoSelected.assets[0].uri)
                     const fileExtension = photoSelected.assets[0].uri.split('.').pop();
+                    const photoName = photoSelected.assets[0].uri.split('/');
+                    console.log(photoName[photoName.length - 1]);
                     const AvatarFile = {
-                        name: `${photoSelected.assets[0].fileName}`,
+                        name: `${photoName[photoName.length - 1]}`,
                         uri: `${photoSelected.assets[0].uri}`,
                         type: `${photoSelected.assets[0].type}/${fileExtension}`
                     } as any
-                        console.log(AvatarFile);
+                       
                     setAvatar(AvatarFile)
                 }
 
@@ -132,7 +134,7 @@ export function SignUp() {
 
         catch (error) {
             const isAppError = error instanceof AppError;
-            const title = isAppError ? isAppError : 'Houve um erro de comunicação com servidor. Tente novamente mais tarde'
+            const title = isAppError ? error.message : 'Houve um erro de comunicação com servidor. Tente novamente mais tarde'
             console.log(error);
             toast.show({
                 title: title,
