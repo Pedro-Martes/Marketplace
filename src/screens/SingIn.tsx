@@ -1,4 +1,4 @@
-import { Center, Image, ScrollView, VStack } from "native-base";
+import { Center, Image, ScrollView, VStack, useToast } from "native-base";
 import logo from "../assets/logo.png"
 import { Title } from "../components/title";
 import { Subtitle } from "../components/subtitle";
@@ -10,6 +10,8 @@ import * as yup from 'yup'
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useAuth } from "../hooks/useAuth";
+import { AppError } from "../utils/AppError";
 
 type FormData = {
     email: string;
@@ -24,14 +26,33 @@ const signInSchema = yup.object({
 export function SignIn() {
 
     const navigation = useNavigation<AuthNavigatorRoutesProps>();
-    const [isLoading, setIsLoading] = useState()
+    const [isLoading, setIsLoading] = useState(false)
+    const toast = useToast()
 
     const { control, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: yupResolver(signInSchema)
     })
+    const { signIn } = useAuth()
 
-    function handleSignIn({ email, password }: FormData) {
-        console.log(email + " sign in " + password);
+    async function handleSignIn({ email, password }: FormData) {
+        setIsLoading(true)
+        try {
+            await signIn(email, password)
+
+        } catch (error) {
+            console.log(error.message);
+            const isAppError = error.message.includes(404);
+            const title= isAppError ? 'E-mail e/ou senha incorreta.' : 'Não foi possível realizar login, tente mais tarde.'
+            
+            setIsLoading(false)
+            toast.show({
+                    title,
+                    placement: 'top',
+                    bgColor:'red.500' , 
+            })
+
+            
+        }
     }
 
     function handleNewAccount() {
@@ -88,7 +109,7 @@ export function SignIn() {
                         )}
                     />
 
-                    <Button w={'100%'} mb={8} onPress={handleSubmit(handleSignIn)}> Entrar</Button>
+                    <Button w={'100%'} mb={8} onPress={handleSubmit(handleSignIn)} isLoading = {isLoading}> Entrar</Button>
 
 
                 </Center>
@@ -96,7 +117,7 @@ export function SignIn() {
             <VStack paddingY={16} paddingX={5}>
                 <Center>
                     <Subtitle text="Não tem uma conta? " />
-                    <Button type="gray" w={'100%'} onPress={handleNewAccount} > Criar conta</Button>
+                    <Button type="gray" w={'100%'} onPress={handleNewAccount} disabled= {isLoading} > Criar conta</Button>
                 </Center>
             </VStack>
 

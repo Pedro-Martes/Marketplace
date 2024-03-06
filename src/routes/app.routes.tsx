@@ -11,7 +11,7 @@ import { SignIn } from "../screens/SingIn";
 type AppRoutes = {
     Home: undefined,
     myAdvertisement: undefined,
-    SignIn: undefined,
+    SignOut: undefined,
     CreateNewAd: undefined,
     Product: undefined,
     ProductPreview: undefined,
@@ -74,8 +74,8 @@ export function AppRoutes() {
                 />
 
                 <Screen
-                    name="SignIn"
-                    component={SignIn}
+                    name="SignOut"
+                    component={SignOut}
                     options={{
                         tabBarIcon: ({ color }) => (
                             <SignOut size={iconsSize} color={colors.red[100]} weight="fill" />
