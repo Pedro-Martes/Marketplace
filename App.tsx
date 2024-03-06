@@ -21,7 +21,7 @@ import { MyProduct } from './src/screens/myProduct';
 import CreateNewAd from './src/screens/CreateNewAdvertisement';
 import { ProductPreview } from './src/screens/preview';
 import { Routes } from './src/routes';
-import { AuthContext } from './src/context/AuthContex';
+import { AuthContext, AuthContextProvider } from './src/context/AuthContext';
 
 export default function App() {
 
@@ -47,20 +47,11 @@ export default function App() {
 
         }}
       >
-        <AuthContext.Provider value={{
-          id: 1,
-          name: 'pedro',
-          avatar: 'https://img.freepik.com/free-vector/man-avatar-silhouette_23-2148850593.jpg?size=338&ext=jpg'
-        }}>
-          {fontsLoaded ?
+        <AuthContextProvider>
 
-            <Routes />
-            :
-            <>
-            </>
-          }
-        </AuthContext.Provider>
+          {fontsLoaded ? <Routes /> : <> </>}
 
+        </AuthContextProvider>
       </SafeAreaView>
 
 

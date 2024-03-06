@@ -3,13 +3,14 @@ import { AuthRoutes } from "./auth.routes";
 import { Box, useTheme } from "native-base";
 import { AppRoutes } from "./app.routes";
 
-import { AuthContext } from "../context/AuthContex";
+import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 export function Routes() {
 
-    const contextData = useContext(AuthContext);
-    console.log(`Usuario logado =>`, contextData);
+    const {user} = useAuth()
+    console.log(user.avatar);
     return (
         <Box flex={1} bg={'gray.200'}>
 
