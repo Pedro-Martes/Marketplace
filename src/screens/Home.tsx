@@ -9,6 +9,8 @@ import { ArrowFatLineRight, ArrowRight, MagnifyingGlass, Plus, Sliders, Tag } fr
 import { ProductCard } from "../components/ProductCard";
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "../routes/app.routes";
+import { useAuth } from "../hooks/useAuth";
+import { api } from "../services/api";
 
 
 
@@ -16,12 +18,15 @@ export function Home() {
     const navigation = useNavigation<AppNavigatorRoutesProps>()
     const PHOTO_SIZE = 45
 
+    const { user, logOut } = useAuth()
+
+
     const Products = [
         {
             id: 1,
-            ImageUri: ['https://source.unsplash.com/random/800x600', 
-            'https://source.unsplash.com/random/800x600', 
-            'https://source.unsplash.com/random/800x600'],
+            ImageUri: ['https://source.unsplash.com/random/800x600',
+                'https://source.unsplash.com/random/800x600',
+                'https://source.unsplash.com/random/800x600'],
             title: 'Tênis Vermelho',
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. A consequuntur cum ducimus possimus. Voluptatum aliquam adipisci labore dignissimos quis saepe illum, molestias excepturi, nesciunt minima quos ratione soluta sequi cum?',
             seller: 'Vinícius Morais',
@@ -38,9 +43,9 @@ export function Home() {
         },
         {
             id: 2,
-            ImageUri: ['https://source.unsplash.com/random/800x600', 
-            'https://source.unsplash.com/random/800x600', 
-            'https://source.unsplash.com/random/800x600'],
+            ImageUri: ['https://source.unsplash.com/random/800x600',
+                'https://source.unsplash.com/random/800x600',
+                'https://source.unsplash.com/random/800x600'],
 
             title: 'Bicicleta',
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. A consequuntur cum ducimus possimus. Voluptatum aliquam adipisci labore dignissimos quis saepe illum, molestias excepturi, nesciunt minima quos ratione soluta sequi cum?',
@@ -59,10 +64,12 @@ export function Home() {
         }
     ]
 
-function handleNewAd(){
-    console.log('objects.handleNewAd()');
-    navigation.navigate('CreateNewAd');
-}
+  
+
+    function handleNewAd() {
+        console.log('objects.handleNewAd()');
+        navigation.navigate('CreateNewAd');
+    }
 
 
     return (
@@ -71,18 +78,18 @@ function handleNewAd(){
 
                 <HStack mt={16} alignItems={'center'} w="100%">
                     <UserImage
-                        source={defaultImage}
+                        source={{ uri: `http://192.168.1.48:3333/images/${user.avatar}` }}
                         alt=''
                         w={PHOTO_SIZE}
                         h={PHOTO_SIZE}
                     />
                     <VStack flex={1} >
                         <Subtitle text={`Bem Vindo(a),`} />
-                        <Title text={`Pedro!`} />
+                        <Title text={`${user.name}`} />
 
 
                     </VStack>
-                    <Button type="black" onPress={handleNewAd}>
+                    <Button type="black" onPress={ logOut}>
                         <VStack>
 
                             <Title text="+ Criar Anúncio" color={'white'} fontSize={12} />
@@ -131,28 +138,28 @@ function handleNewAd(){
 
                     </HStack>
                 </VStack>
-              
-
-                    <FlatList
-                        data={Products}
-                        keyExtractor={(item) => item.id.toString()}
-                        numColumns={2}
-                        renderItem={({ item }) => (
 
 
-                            <ProductCard
-                                data={item}
-                                
-                            />
+                <FlatList
+                    data={Products}
+                    keyExtractor={(item) => item.id.toString()}
+                    numColumns={2}
+                    renderItem={({ item }) => (
 
-                        )}
-                        showsVerticalScrollIndicator={false}
-                        _contentContainerStyle={{
-                          paddingBottom: 20
-                        }}
-                    /> 
 
-           
+                        <ProductCard
+                            data={item}
+
+                        />
+
+                    )}
+                    showsVerticalScrollIndicator={false}
+                    _contentContainerStyle={{
+                        paddingBottom: 20
+                    }}
+                />
+
+
 
             </VStack>
         </ >

@@ -11,7 +11,7 @@ import { Loading } from "../components/loading";
 export function Routes() {
 
     const {user, isLoadingStorage} = useAuth()
-    console.log(user);
+
 
     if(isLoadingStorage){
         return <Loading />;

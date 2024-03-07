@@ -6,12 +6,14 @@ import { House, SignOut, Tag } from "phosphor-react-native";
 import { MyAdvertisement } from "../screens/myAdvertisement";
 import React from "react";
 import { SignIn } from "../screens/SingIn";
+import { useAuth } from "../hooks/useAuth";
+import { Logout } from "../screens/Logout";
 
 
 type AppRoutes = {
     Home: undefined,
     myAdvertisement: undefined,
-    SignOut: undefined,
+    logOut: undefined,
     CreateNewAd: undefined,
     Product: undefined,
     ProductPreview: undefined,
@@ -29,6 +31,7 @@ export function AppRoutes() {
 
     const { sizes, colors } = useTheme();
     const iconsSize = sizes[6]
+    const { logOut } = useAuth()
     return (
         <>
 
@@ -74,11 +77,12 @@ export function AppRoutes() {
                 />
 
                 <Screen
-                    name="SignOut"
-                    component={SignOut}
+                    name="logOut"
+                    component={Logout}
                     options={{
                         tabBarIcon: ({ color }) => (
                             <SignOut size={iconsSize} color={colors.red[100]} weight="fill" />
+
                         )
                     }}
                 />

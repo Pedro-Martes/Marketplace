@@ -1,3 +1,3 @@
 const USER_STORAGE = '@bargain:userStorage';
-
-export {USER_STORAGE}
+const AUTH_TOKEN_STORAGE = '@bargain:tokenStorage';
+export {USER_STORAGE, AUTH_TOKEN_STORAGE}
