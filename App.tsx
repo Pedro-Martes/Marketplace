@@ -22,6 +22,7 @@ import CreateNewAd from './src/screens/CreateNewAdvertisement';
 import { ProductPreview } from './src/screens/preview';
 import { Routes } from './src/routes';
 import { AuthContext, AuthContextProvider } from './src/context/AuthContext';
+import { Loading } from './src/components/loading';
 
 export default function App() {
 
@@ -49,7 +50,7 @@ export default function App() {
       >
         <AuthContextProvider>
 
-          {fontsLoaded ? <Routes /> : <> </>}
+          {fontsLoaded ? <Routes /> : <Loading/>}
 
         </AuthContextProvider>
       </SafeAreaView>

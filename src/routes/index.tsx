@@ -6,11 +6,17 @@ import { AppRoutes } from "./app.routes";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import { useAuth } from "../hooks/useAuth";
+import { Loading } from "../components/loading";
 
 export function Routes() {
 
-    const {user} = useAuth()
+    const {user, isLoadingStorage} = useAuth()
     console.log(user);
+
+    if(isLoadingStorage){
+        return <Loading />;
+    } 
+
     return (
         <Box flex={1} bg={'gray.200'}>
 
