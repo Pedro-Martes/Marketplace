@@ -27,7 +27,7 @@ export function Home() {
   
 
     function handleNewAd() {
-        console.log('objects.handleNewAd()');
+
         navigation.navigate('CreateNewAdvertisement');
     }
 
@@ -47,7 +47,7 @@ export function Home() {
 
     useEffect(()=>{
         fetchProducts()
-    })
+    }, [])
 
 
     return (
@@ -67,7 +67,7 @@ export function Home() {
 
 
                     </VStack>
-                    <Button type="black" onPress={handleNewAd}>
+                    <Button type="black" onPress={() => handleNewAd()}>
                         <VStack>
 
                             <Title text="+ Criar Anúncio" color={'white'} fontSize={12} />

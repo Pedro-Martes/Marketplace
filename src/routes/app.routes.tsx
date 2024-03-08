@@ -19,14 +19,12 @@ type AppRoutes = {
     Product: undefined,
     ProductPreview: undefined,
     MyProduct: undefined
+    CreateNewAdvertisement: undefined,
 
 }
-type StackRoutes = {
-    CreateNewAdvertisement: undefined,
-}
+
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
-export type AppStackNavigatorRoutesProps = NativeStackNavigationProp<StackRoutes>
 
 const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>();
 
@@ -89,6 +87,12 @@ export function AppRoutes() {
 
                         )
                     }}
+                />
+
+                <Screen 
+                name="CreateNewAdvertisement"
+                component={CreateNewAdvertisement}
+                options={{tabBarButton: ()=> null}}
                 />
 
 

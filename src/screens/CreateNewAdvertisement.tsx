@@ -9,14 +9,42 @@ import { useState } from "react";
 import { Switch } from "../components/switch";
 import { Check } from "../components/checkbox";
 import ToggleSwitch, { ToggleSwitchProps } from "toggle-switch-react-native"
+import * as ImagePicker from 'expo-image-picker'
+import * as FileSystem from 'expo-file-system'
+import { useAuth } from "../hooks/useAuth";
 
 
-export  function CreateNewAdvertisement() {
+export function CreateNewAdvertisement() {
     const PHOTO_SIZE = 100
 
     const ProductImages = ['https://source.unsplash.com/random/802x602', 'add']
     const [status, setStatus] = useState('Novo')
     const [trade, setTrade] = useState(false);
+    const { user } = useAuth()
+
+    
+    async function handleProducPhotoSelected() {
+        try {
+            const imageSelected = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [PHOTO_SIZE, PHOTO_SIZE],
+                quality: 1,
+            })
+
+            if (imageSelected.canceled) {
+                return;
+            }
+
+            if (imageSelected.assets[0].uri) {
+                const imageInfo = await FileSystem.getInfoAsync(imageSelected.assets[0].uri);
+
+            }
+
+        } catch (error) {
+
+        }
+    }
 
     return (
         <ScrollView bg={'gray.200'} flex={1}>
@@ -194,8 +222,8 @@ export  function CreateNewAdvertisement() {
 
             </VStack >
             <HStack background={'white'} flex={1} py={6} justifyContent={'center'}>
-                <Button type="gray" mr={6} mt={0}  py={3} px={12}>Cancelar</Button>
-                <Button type="black" mt={0}  py={3} px={12} >Avançar</Button>
+                <Button type="gray" mr={6} mt={0} py={3} px={12}>Cancelar</Button>
+                <Button type="black" mt={0} py={3} px={12} >Avançar</Button>
 
             </HStack>
         </ScrollView>
