@@ -8,21 +8,25 @@ import React from "react";
 import { SignIn } from "../screens/SingIn";
 import { useAuth } from "../hooks/useAuth";
 import { Logout } from "../screens/Logout";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import {  CreateNewAdvertisement} from "../screens/CreateNewAdvertisement";
 
 
 type AppRoutes = {
     Home: undefined,
     myAdvertisement: undefined,
     logOut: undefined,
-    CreateNewAd: undefined,
     Product: undefined,
     ProductPreview: undefined,
     MyProduct: undefined
 
-
-
 }
+type StackRoutes = {
+    CreateNewAdvertisement: undefined,
+}
+
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
+export type AppStackNavigatorRoutesProps = NativeStackNavigationProp<StackRoutes>
 
 const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>();
 

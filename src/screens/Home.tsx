@@ -8,9 +8,10 @@ import { Button } from "../components/button";
 import { ArrowFatLineRight, ArrowRight, MagnifyingGlass, Plus, Sliders, Tag } from "phosphor-react-native";
 import { ProductCard } from "../components/ProductCard";
 import { useNavigation } from "@react-navigation/native";
-import { AppNavigatorRoutesProps } from "../routes/app.routes";
+import { AppNavigatorRoutesProps, AppStackNavigatorRoutesProps } from "../routes/app.routes";
 import { useAuth } from "../hooks/useAuth";
 import { api } from "../services/api";
+import { useEffect, useState } from "react";
 
 
 
@@ -19,57 +20,34 @@ export function Home() {
     const PHOTO_SIZE = 45
 
     const { user, logOut } = useAuth()
+    const [Products , setProduct] = useState()
 
 
-    const Products = [
-        {
-            id: 1,
-            ImageUri: ['https://source.unsplash.com/random/800x600',
-                'https://source.unsplash.com/random/800x600',
-                'https://source.unsplash.com/random/800x600'],
-            title: 'Tênis Vermelho',
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. A consequuntur cum ducimus possimus. Voluptatum aliquam adipisci labore dignissimos quis saepe illum, molestias excepturi, nesciunt minima quos ratione soluta sequi cum?',
-            seller: 'Vinícius Morais',
-            status: 'Novo',
-            price: 100.90,
-            troca: true,
-            boleto: true,
-            pix: true,
-            dinheiro: true,
-            deposito: true,
-            credito: true,
-            ativo: false,
-
-        },
-        {
-            id: 2,
-            ImageUri: ['https://source.unsplash.com/random/800x600',
-                'https://source.unsplash.com/random/800x600',
-                'https://source.unsplash.com/random/800x600'],
-
-            title: 'Bicicleta',
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. A consequuntur cum ducimus possimus. Voluptatum aliquam adipisci labore dignissimos quis saepe illum, molestias excepturi, nesciunt minima quos ratione soluta sequi cum?',
-            seller: 'Maria Souza',
-            status: 'usado',
-            price: 250.90,
-            troca: true,
-            boleto: true,
-            pix: true,
-            dinheiro: true,
-            deposito: true,
-            credito: true,
-            ativo: true,
-
-
-        }
-    ]
-
+ 
   
 
     function handleNewAd() {
         console.log('objects.handleNewAd()');
-        navigation.navigate('CreateNewAd');
+        navigation.navigate('CreateNewAdvertisement');
     }
+
+    function handleProduct(){
+        navigation.navigate('Product')
+    }
+
+    async function fetchProducts(){
+        try {
+            const response = await api.get('/products')
+            console.log(response.data);
+            setProduct(response.data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(()=>{
+        fetchProducts()
+    })
 
 
     return (
@@ -78,7 +56,7 @@ export function Home() {
 
                 <HStack mt={16} alignItems={'center'} w="100%">
                     <UserImage
-                        source={{ uri: `http://192.168.1.48:3333/images/${user.avatar}` }}
+                        source={{ uri: `${api.defaults.baseURL}/images/${user.avatar}` }}
                         alt=''
                         w={PHOTO_SIZE}
                         h={PHOTO_SIZE}
@@ -89,7 +67,7 @@ export function Home() {
 
 
                     </VStack>
-                    <Button type="black" onPress={ logOut}>
+                    <Button type="black" onPress={handleNewAd}>
                         <VStack>
 
                             <Title text="+ Criar Anúncio" color={'white'} fontSize={12} />

@@ -3,16 +3,24 @@ import { TouchableOpacity, TouchableOpacityProps } from "react-native"
 import { Subtitle } from "./subtitle";
 import { Title } from "./title";
 import { ProductDTO } from "../dtos/ProductDTO";
+import { useNavigation } from "@react-navigation/native";
+import { AppNavigatorRoutesProps } from "../routes/app.routes";
 
 type ProductCardProps = TouchableOpacityProps & {
     data?: ProductDTO[];
 }
 export function ProductCard({ data, ...rest }: ProductCardProps) {
     const ImagemWidth = 153
+
+    const navigator = useNavigation<AppNavigatorRoutesProps>()
+
+    function handleProduct(){
+        navigator.navigate('Product')
+    }
    
 
     return (
-        <TouchableOpacity {...rest} >
+        <TouchableOpacity {...rest} onPress={handleProduct}>
         
             <VStack mt={8} w={ImagemWidth} mr={3}  >
                 

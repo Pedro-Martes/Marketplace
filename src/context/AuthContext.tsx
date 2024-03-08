@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import { UserDTO } from "../dtos/UserDTO";
 import { api } from "../services/api";
 import { storageUserLoad, storageUserRemove, storageUserSave } from "../storage/storageUser";
-import { storageAuthTokenGet, storageAuthTokenInsert } from "../storage/storageAuthToken";
+import { storageAuthTokenGet, storageAuthTokenInsert, storageAuthTokenRemove } from "../storage/storageAuthToken";
 
 export type AuthContextDataProps = {
     user: UserDTO;
@@ -76,7 +76,8 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         try {
             setIsLoadingStorage(true)
             setUser({} as UserDTO)
-            storageUserRemove()
+            await storageUserRemove()
+            await storageAuthTokenRemove()
         } catch (error) {
             throw (error)
         } finally {
