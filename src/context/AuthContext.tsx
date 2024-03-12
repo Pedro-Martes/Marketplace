@@ -23,6 +23,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
 
     async function storageUserAndToken(userData: UserDTO, token: string) {
+        console.log(token);
         try {
             api.defaults.headers.common[`Authorization`] = `Bearer ${token}`;
             setIsLoadingStorage(true)

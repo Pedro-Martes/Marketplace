@@ -1,4 +1,4 @@
-import { HStack, Text, VStack, Image, FlatList, TextArea, ScrollView, Radio } from "native-base";
+import { HStack, Text, VStack, Image, FlatList, TextArea, ScrollView, Radio, useToast, Center } from "native-base";
 import { ArrowLeft, ArrowRight, Plus, XCircle } from "phosphor-react-native";
 import { Title } from "../components/title";
 import { TouchableOpacity, View } from "react-native";
@@ -12,7 +12,27 @@ import ToggleSwitch, { ToggleSwitchProps } from "toggle-switch-react-native"
 import * as ImagePicker from 'expo-image-picker'
 import * as FileSystem from 'expo-file-system'
 import { useAuth } from "../hooks/useAuth";
+import * as yup from "yup";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
+type ProductFormDataProps = {
+    name: string;
+    description?: string | null;
+    is_new: boolean;
+    price: string;
+    accept_trade: boolean;
+    // payment_methods: string[];
+}
+
+const ProductSchema = yup.object({
+    name: yup.string().required('Nome obrigatório'),
+    description: yup.string().nullable(),
+    is_new: yup.boolean().required('Status obrigatório'),
+    price: yup.string().required('Preço obrigatório'),
+    accept_trade: yup.boolean(),
+    // payment_methods: yup.array().required('Selecione no mínimo um método de pagamento.'),
+})
 
 export function CreateNewAdvertisement() {
     const PHOTO_SIZE = 100
@@ -21,8 +41,12 @@ export function CreateNewAdvertisement() {
     const [status, setStatus] = useState('Novo')
     const [trade, setTrade] = useState(false);
     const { user } = useAuth()
+    const toast = useToast()
 
-    
+    const { control, handleSubmit, formState: { errors } } = useForm<ProductFormDataProps>({
+        resolver: yupResolver(ProductSchema)
+    })
+
     async function handleProducPhotoSelected() {
         try {
             const imageSelected = await ImagePicker.launchImageLibraryAsync({
@@ -44,6 +68,10 @@ export function CreateNewAdvertisement() {
         } catch (error) {
 
         }
+    }
+
+    function handleNewProduct(props: ProductFormDataProps) {
+        console.log(JSON.stringify(props));
     }
 
     return (
@@ -117,90 +145,149 @@ export function CreateNewAdvertisement() {
                     />
                 </HStack>
 
-                <Title text="Sobre o Produto" mt={'32px'} />
-                <Input placeholder="Título do anúncio" />
+                <Title text="Sobre o Produto" mt={'32px'} mb={3} />
 
-                {/* ⬇ TextArea Input ⬇ */}
-                <TextArea
-                    autoCompleteType={false}
-                    placeholder="Descrição completa do produto (opcional)"
-                    mt={3}
-                    backgroundColor={'white'}
-                    borderWidth={0}
-                    fontSize={'md'}
-                    fontFamily={'body'}
-                    placeholderTextColor={'gray.300'}
-                    _focus={{
-                        borderWidth: '1px',
-                        borderColor: 'gray.300',
-                        bg: "white"
-                    }}
+                {/* ⬇ Name Input ⬇ */}
+                <Controller
+                    control={control}
+                    name='name'
+                    render={({ field: { onChange, value } }) => (
+                        <Input
+                            placeholder="Título do anúncio"
+                            onChangeText={onChange}
+                            value={value}
+                            isRequired
+                            errorMessage={errors.name?.message}
+
+                        />
+                    )}
                 />
 
-                {/* ⬇ Radio Buttons ⬇ */}
-                <Radio.Group
-                    name="Status"
-                    value={status}
-                    flex={1}
-
-                    onChange={NextValue => {
-                        setStatus(NextValue)
-                    }}>
-
-
-                    <HStack>
-                        <Radio
-                            value="Novo"
+                {/* ⬇ Description Input ⬇ */}
+                <Controller
+                    control={control}
+                    name='description'
+                    render={({ field: { onChange, value } }) => (
+                        <TextArea
+                            autoCompleteType={false}
+                            placeholder="Descrição completa do produto (opcional)"
                             mt={3}
-                            alignItems={'center'}
-                            _text={{ color: 'gray.500' }}
-                            _icon={{
-                                color: 'blue.primary',
-                                borderColor: 'blue.primary',
-                                size: 3,
+                            backgroundColor={'white'}
+                            borderWidth={0}
+                            fontSize={'md'}
+                            fontFamily={'body'}
+                            placeholderTextColor={'gray.300'}
+                            _focus={{
+                                borderWidth: '1px',
+                                borderColor: 'gray.300',
+                                bg: "white"
                             }}
-                            _checked={{
-                                borderColor: 'blue.primary',
+                            onChangeText={onChange}
+                            value={value}
 
-                            }}
+                        />
+                    )}
+                />
 
-                        >
-                            <Text mt={3} color={'gray.400'} fontSize={16} fontFamily={'body'} mr={'20px'}>Produto Novo</Text>
-                        </Radio>
-
-                        <Radio
-                            value="Usado"
-                            mt={3}
-                            alignItems={'center'}
-                            _text={{ color: 'gray.500' }}
-                            _icon={{
-                                color: 'blue.primary',
-                                borderColor: 'blue.primary',
-                                size: 3,
-                            }}
-                            _checked={{
-                                borderColor: 'blue.primary',
-
-                            }}
-                            ml={'20px'}
+                {/* ⬇ Is_new Radio Buttons ⬇ */}
+                <Controller
+                    control={control}
+                    name='is_new'
+                    render={({ field: { onChange, value = 'true' } }) => (
+                        <Radio.Group
+                            name="is_new"
+                            value={value}
+                            flex={1}
+                            onChange={onChange}
 
                         >
 
-                            <Text mt={3} color={'gray.400'} fontSize={16} fontFamily={'body'} >Produto Usado</Text>
 
-                        </Radio>
+                            <HStack>
+                                <Radio
 
-                    </HStack>
-                </Radio.Group>
+                                    value='true'
+                                    mt={3}
+                                    alignItems={'center'}
+                                    _text={{ color: 'gray.500' }}
+                                    _icon={{
+                                        color: 'blue.primary',
+                                        borderColor: 'blue.primary',
+                                        size: 3,
+                                    }}
+                                    _checked={{
+                                        borderColor: 'blue.primary',
 
+                                    }}
+
+                                >
+                                    <Text mt={3} color={'gray.400'} fontSize={16} fontFamily={'body'} mr={'20px'}>Produto Novo</Text>
+                                </Radio>
+
+                                <Radio
+                                    value='false'
+                                    mt={3}
+                                    alignItems={'center'}
+                                    _text={{ color: 'gray.500' }}
+                                    _icon={{
+                                        color: 'blue.primary',
+                                        borderColor: 'blue.primary',
+                                        size: 3,
+                                    }}
+                                    _checked={{
+                                        borderColor: 'blue.primary',
+
+                                    }}
+                                    ml={'20px'}
+
+                                >
+
+                                    <Text mt={3} color={'gray.400'} fontSize={16} fontFamily={'body'} >Produto Usado</Text>
+
+                                </Radio>
+
+                            </HStack>
+                        </Radio.Group>
+                    )}
+
+                />
+
+
+                {/* ⬇ Price Input ⬇ */}
                 <Title text="Venda" mt={'32px'} />
-                <HStack background={'white'} rounded={10} alignItems={'center'} px={5} mt={3}>
-                    <Title text="R$" fontWeight={'hairline'} mt={0} />
-                    <Input placeholder="Valor do produto" mt={0} />
+                <Title text={errors.price?.message ? errors.price?.message : ''} color={'red.500'} />
+                <Controller
+                    control={control}
+                    name="price"
+                    render={({ field: { onChange, value } }) => (
+                        <HStack background={'white'} alignItems={'center'} rounded={10} px={5} mt={3}>
 
-                </HStack>
+                            <Title text="R$" fontWeight={'hairline'} mt={0} />
+                            <Input
+                                placeholder={"Valor do produto"}
+                                keyboardType="decimal-pad"
+                                onChangeText={onChange}
+                                value={value}
+
+                            />
+
+
+                        </HStack>
+                    )}
+
+                />
+            {/* <Controller
+            
+            /> */}
+
+
+
+
+
+
 
                 <Title text="Aceita troca?" mt={3} mb={3} />
+
 
                 <ToggleSwitch
                     isOn={trade}
@@ -208,6 +295,7 @@ export function CreateNewAdvertisement() {
                     offColor={'#d9d8da'}
                     onToggle={isOn => setTrade(isOn)}
                     animationSpeed={200}
+
 
 
                 />
@@ -223,7 +311,7 @@ export function CreateNewAdvertisement() {
             </VStack >
             <HStack background={'white'} flex={1} py={6} justifyContent={'center'}>
                 <Button type="gray" mr={6} mt={0} py={3} px={12}>Cancelar</Button>
-                <Button type="black" mt={0} py={3} px={12} >Avançar</Button>
+                <Button type="black" mt={0} py={3} px={12} onPress={handleSubmit(handleNewProduct)}>Avançar</Button>
 
             </HStack>
         </ScrollView>
