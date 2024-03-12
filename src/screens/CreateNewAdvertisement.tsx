@@ -21,16 +21,16 @@ type ProductFormDataProps = {
     description?: string | null;
     is_new: boolean;
     price: string;
-    accept_trade: boolean;
+    // accept_trade: boolean;
     // payment_methods: string[];
 }
 
 const ProductSchema = yup.object({
     name: yup.string().required('Nome obrigatório'),
     description: yup.string().nullable(),
-    is_new: yup.boolean().required('Status obrigatório'),
+    is_new: yup.boolean().required('Status obrigatório').default(true),
     price: yup.string().required('Preço obrigatório'),
-    accept_trade: yup.boolean(),
+    //accept_trade: yup.boolean(),
     // payment_methods: yup.array().required('Selecione no mínimo um método de pagamento.'),
 })
 
@@ -276,7 +276,7 @@ export function CreateNewAdvertisement() {
                     )}
 
                 />
-            {/* <Controller
+                {/* <Controller
             
             /> */}
 
