@@ -4,9 +4,10 @@ import { Checkbox as NativeCheckbox, ICheckboxProps, Text } from 'native-base'
 
 type Props = ICheckboxProps & {
     value: string
+    title: string
 }
 
-export function Check({ value, ...rest }: Props) {
+export function Check({ value,title,  ...rest }: Props) {
     return (
 
         <NativeCheckbox
@@ -24,7 +25,7 @@ export function Check({ value, ...rest }: Props) {
         >
             <Text fontFamily={'body'} fontSize={16} color={'gray.400'} >
 
-                {value}
+                {title}
             </Text>
         </NativeCheckbox>
     )

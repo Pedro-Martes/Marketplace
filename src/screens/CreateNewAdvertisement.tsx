@@ -21,8 +21,8 @@ type ProductFormDataProps = {
     description?: string | null;
     is_new: boolean;
     price: string;
-    // accept_trade: boolean;
-    // payment_methods: string[];
+    accept_trade: boolean;
+    payment_methods: any;
 }
 
 const ProductSchema = yup.object({
@@ -30,8 +30,8 @@ const ProductSchema = yup.object({
     description: yup.string().nullable(),
     is_new: yup.boolean().required('Status obrigatório').default(true),
     price: yup.string().required('Preço obrigatório'),
-    //accept_trade: yup.boolean(),
-    // payment_methods: yup.array().required('Selecione no mínimo um método de pagamento.'),
+    accept_trade: yup.boolean().default(false),
+    payment_methods: yup.string().required('Selecione no mínimo um método de pagamento.'),
 })
 
 export function CreateNewAdvertisement() {
@@ -43,7 +43,7 @@ export function CreateNewAdvertisement() {
     const { user } = useAuth()
     const toast = useToast()
 
-    const { control, handleSubmit, formState: { errors } } = useForm<ProductFormDataProps>({
+    const { control, handleSubmit, setValue, formState: { errors } } = useForm<ProductFormDataProps>({
         resolver: yupResolver(ProductSchema)
     })
 
@@ -72,6 +72,10 @@ export function CreateNewAdvertisement() {
 
     function handleNewProduct(props: ProductFormDataProps) {
         console.log(JSON.stringify(props));
+    }
+
+    function handleCheckbox(value: string, checked: boolean, props?: ProductFormDataProps) {
+        const updatePaymentMethods = control.getValues()
     }
 
     return (
@@ -276,36 +280,58 @@ export function CreateNewAdvertisement() {
                     )}
 
                 />
-                {/* <Controller
-            
-            /> */}
+
+                {/* ⬇ Trade Switch ⬇ */}
+                <Controller
+                    control={control}
+                    name="accept_trade"
+                    render={({ field: { onChange, value = false } }) => (
+                        <>
+                            <Title text="Aceita troca?" mt={3} mb={3} />
+                            <ToggleSwitch
+                                isOn={value}
+                                onColor={'#647AC7'}
+                                offColor={'#d9d8da'}
+                                onToggle={onChange}
+                                animationSpeed={200}
 
 
 
-
-
-
-
-                <Title text="Aceita troca?" mt={3} mb={3} />
-
-
-                <ToggleSwitch
-                    isOn={trade}
-                    onColor={'#647AC7'}
-                    offColor={'#d9d8da'}
-                    onToggle={isOn => setTrade(isOn)}
-                    animationSpeed={200}
-
-
+                            />
+                        </>
+                    )
+                    }
 
                 />
 
-                <Title text="Meios de pagamento aceitos" mt={3} />
-                <Check value="Boleto" mt={3} />
-                <Check value="Pix" mt={3} />
-                <Check value="Dinheiro" mt={3} />
-                <Check value="Cartão de Crédito" mt={3} />
-                <Check value="Boleto" mt={3} />
+                <Controller
+                    control={control}
+                    name="payment_methods"
+                    render={({ field: { onChange, value  } }) => (
+                        <>
+                            <Title text={errors.payment_methods?.message} />
+                            <Title text="Meios de pagamento aceitos" mt={3} />
+                            <Check
+                                value={value}
+                                title={"Boleto"}
+                                mt={3}
+                                onChange={onChange}
+
+                            />
+                            <Check title="Pix" mt={3} />
+                            <Check title="Dinheiro" mt={3} />
+                            <Check title="Cartão de Crédito" mt={3} />
+
+                        </>
+
+                    )}
+                />
+
+
+
+
+
+
 
 
             </VStack >
