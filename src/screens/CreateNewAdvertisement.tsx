@@ -1,7 +1,7 @@
-import { HStack, Text, VStack, Image, FlatList, TextArea, ScrollView, Radio, useToast, Center } from "native-base";
+import { HStack, Text, VStack, Image, FlatList, TextArea, ScrollView, Radio, useToast, Center, Checkbox } from "native-base";
 import { ArrowLeft, ArrowRight, Plus, XCircle } from "phosphor-react-native";
 import { Title } from "../components/title";
-import { TouchableOpacity, View } from "react-native";
+import { LogBox, TouchableOpacity, View } from "react-native";
 import { Subtitle } from "../components/subtitle";
 import { Button } from "../components/button";
 import { Input } from "../components/input";
@@ -15,6 +15,7 @@ import { useAuth } from "../hooks/useAuth";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { api } from "../services/api";
 
 type ProductFormDataProps = {
     name: string;
@@ -22,7 +23,7 @@ type ProductFormDataProps = {
     is_new: boolean;
     price: string;
     accept_trade: boolean;
-    payment_methods: any;
+    payment_methods: string[];
 }
 
 const ProductSchema = yup.object({
@@ -31,7 +32,7 @@ const ProductSchema = yup.object({
     is_new: yup.boolean().required('Status obrigatório').default(true),
     price: yup.string().required('Preço obrigatório'),
     accept_trade: yup.boolean().default(false),
-    payment_methods: yup.string().required('Selecione no mínimo um método de pagamento.'),
+    payment_methods: yup.array().min(1, 'Selecione no mínimo um método de pagamento.'),
 })
 
 export function CreateNewAdvertisement() {
@@ -39,6 +40,7 @@ export function CreateNewAdvertisement() {
 
     const ProductImages = ['https://source.unsplash.com/random/802x602', 'add']
     const [status, setStatus] = useState('Novo')
+    const [isLoading, setIsLoading] = useState(false)
     const [trade, setTrade] = useState(false);
     const { user } = useAuth()
     const toast = useToast()
@@ -70,13 +72,29 @@ export function CreateNewAdvertisement() {
         }
     }
 
-    function handleNewProduct(props: ProductFormDataProps) {
+    async function handleNewProduct(props: ProductFormDataProps) {
         console.log(JSON.stringify(props));
+        setIsLoading(true)
+        try {
+            const numberPrice = parseInt(props.price)
+            console.log(numberPrice);
+            const product = await api.post("/products", {
+
+                name: props.name,
+                description: props.description,
+                is_new: props.is_new,
+                price: numberPrice,
+                accept_trade: props.accept_trade,
+                payment_methods: props.payment_methods,
+            })
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
-    function handleCheckbox(value: string, checked: boolean, props?: ProductFormDataProps) {
-        const updatePaymentMethods = control.getValues()
-    }
+
 
     return (
         <ScrollView bg={'gray.200'} flex={1}>
@@ -307,20 +325,39 @@ export function CreateNewAdvertisement() {
                 <Controller
                     control={control}
                     name="payment_methods"
-                    render={({ field: { onChange, value  } }) => (
+                    render={({ field: { onChange, value } }) => (
                         <>
                             <Title text={errors.payment_methods?.message} />
                             <Title text="Meios de pagamento aceitos" mt={3} />
-                            <Check
-                                value={value}
-                                title={"Boleto"}
-                                mt={3}
-                                onChange={onChange}
 
-                            />
-                            <Check title="Pix" mt={3} />
-                            <Check title="Dinheiro" mt={3} />
-                            <Check title="Cartão de Crédito" mt={3} />
+                            <Checkbox.Group
+                                value={value}
+                                onChange={onChange}
+                            >
+
+                                <Check
+                                    value={'boleto'}
+                                    title={"Boleto"}
+                                    mt={3}
+                                />
+                                <Check
+                                    value={"pix"}
+                                    title={"Pix"}
+                                    mt={3}
+                                />
+
+                                <Check
+                                    value={"cash"}
+                                    title={"Dinheiro"}
+                                    mt={3}
+                                />
+                                <Check
+                                    value={"card"}
+                                    title={"Cartão de Crédito"}
+                                    mt={3}
+                                />
+
+                            </Checkbox.Group>
 
                         </>
 
@@ -337,9 +374,14 @@ export function CreateNewAdvertisement() {
             </VStack >
             <HStack background={'white'} flex={1} py={6} justifyContent={'center'}>
                 <Button type="gray" mr={6} mt={0} py={3} px={12}>Cancelar</Button>
-                <Button type="black" mt={0} py={3} px={12} onPress={handleSubmit(handleNewProduct)}>Avançar</Button>
+                <Button type="black" mt={0} py={3} px={12} onPress={handleSubmit(handleNewProduct)} isLoading={isLoading}>Avançar</Button>
 
             </HStack>
         </ScrollView>
     )
 }
+
+// Procurando solução
+LogBox.ignoreLogs([
+    "We can not support a function callback. See Github Issues for details https://github.com/adobe/react-spectrum/issues/2320",
+]);
