@@ -1,17 +1,13 @@
+import { string } from "yup";
 
-export type ProductDTO = {
-    id: symbol,
-    title: string,
-    price: number,
-    ImageUri: string[],
-    description: string,
-    status: string,
-    seller: string,
-    troca: boolean,
-    boleto: boolean,
-    pix: boolean,
-    dinheiro: boolean,
-    deposito: boolean,
-    credito: boolean,
-    ativo: boolean,
+
+export type ProductPropsDTO = {
+
+    images: any[];
+    name: string;
+    description: string;
+    is_new: boolean;
+    price: string;
+    accept_trade: boolean;
+    payment_methods: string[];
 }

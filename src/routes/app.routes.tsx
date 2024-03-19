@@ -10,6 +10,8 @@ import { useAuth } from "../hooks/useAuth";
 import { Logout } from "../screens/Logout";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {  CreateNewAdvertisement} from "../screens/CreateNewAdvertisement";
+import { ProductPreview } from "../screens/preview";
+import { ProductDTO } from "../dtos/ProductDTO";
 
 
 type AppRoutes = {
@@ -17,9 +19,9 @@ type AppRoutes = {
     myAdvertisement: undefined,
     logOut: undefined,
     Product: undefined,
-    ProductPreview: undefined,
     MyProduct: undefined
     CreateNewAdvertisement: undefined,
+    ProductPreview: ProductDTO,
 
 }
 
@@ -93,6 +95,12 @@ export function AppRoutes() {
                 name="CreateNewAdvertisement"
                 component={CreateNewAdvertisement}
                 options={{tabBarButton: ()=> null}}
+                />
+                <Screen
+                name="ProductPreview"
+                component={ProductPreview}
+                options={{tabBarButton: ()=> null}}
+                
                 />
 
 

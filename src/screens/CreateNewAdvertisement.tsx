@@ -16,19 +16,15 @@ import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { api } from "../services/api";
+import { ProductPropsDTO } from "../dtos/ProductDTO";
+import { useNavigation } from "@react-navigation/native";
+import { AppNavigatorRoutesProps } from "../routes/app.routes";
 
-type ProductFormDataProps = {
-    name: string;
-    description?: string | null;
-    is_new: boolean;
-    price: string;
-    accept_trade: boolean;
-    payment_methods: string[];
-}
+
 
 const ProductSchema = yup.object({
     name: yup.string().required('Nome obrigatório'),
-    description: yup.string().nullable(),
+    description: yup.string().default('.'),
     is_new: yup.boolean().required('Status obrigatório').default(true),
     price: yup.string().required('Preço obrigatório'),
     accept_trade: yup.boolean().default(false),
@@ -38,19 +34,21 @@ const ProductSchema = yup.object({
 export function CreateNewAdvertisement() {
     const PHOTO_SIZE = 100
 
-    const ProductImages = ['https://source.unsplash.com/random/802x602', 'add']
-    const [status, setStatus] = useState('Novo')
+    const [ProductImages, setProductImages] = useState(['add'])
     const [isLoading, setIsLoading] = useState(false)
     const [trade, setTrade] = useState(false);
     const { user } = useAuth()
     const toast = useToast()
+    const navigator = useNavigation<AppNavigatorRoutesProps>()
 
-    const { control, handleSubmit, setValue, formState: { errors } } = useForm<ProductFormDataProps>({
-        resolver: yupResolver(ProductSchema)
+    const { control, handleSubmit, formState: { errors } } = useForm<ProductPropsDTO>({
+        resolver: yupResolver(ProductSchema),
     })
 
-    async function handleProducPhotoSelected() {
+    async function handleProductPhotoSelected() {
+
         try {
+
             const imageSelected = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
@@ -58,42 +56,90 @@ export function CreateNewAdvertisement() {
                 quality: 1,
             })
 
+
             if (imageSelected.canceled) {
                 return;
             }
 
             if (imageSelected.assets[0].uri) {
                 const imageInfo = await FileSystem.getInfoAsync(imageSelected.assets[0].uri);
+                const imagName = imageSelected.assets[0].uri.split('/');
+                const imageExtension = imageSelected.assets[0].uri.split('.').pop();
+                const imageFile = {
+                    name: `${imagName[imagName.length - 1]}`,
+                    uri: `${imageSelected.assets[0].uri}`,
+                    type: `${imageSelected.assets[0].type}/${imageExtension}`,
+                } as any
+
+                setProductImages((image) =>  {
+                    return [imageSelected.assets[0].uri, ...image,]
+                })
+
 
             }
 
         } catch (error) {
-
-        }
-    }
-
-    async function handleNewProduct(props: ProductFormDataProps) {
-        console.log(JSON.stringify(props));
-        setIsLoading(true)
-        try {
-            const numberPrice = parseInt(props.price)
-            console.log(numberPrice);
-            const product = await api.post("/products", {
-
-                name: props.name,
-                description: props.description,
-                is_new: props.is_new,
-                price: numberPrice,
-                accept_trade: props.accept_trade,
-                payment_methods: props.payment_methods,
-            })
-        } catch (error) {
             console.log(error);
-        } finally {
-            setIsLoading(false);
         }
     }
 
+    async function handleNewProduct({ name, price, payment_methods, is_new, description, accept_trade }: ProductPropsDTO) {
+
+        setIsLoading(true)
+
+        try {
+            const numberPrice = parseInt(price)
+
+            if (ProductImages.length === 1) {
+                return toast.show({
+                title: 'Selecione pelo menos uma imagem',
+                placement: 'top',
+                bgColor: 'red.500',
+            })
+        }
+        
+        
+        navigator.navigate('ProductPreview', {
+            images: ProductImages,
+            name,
+            description,
+            price: numberPrice,
+            payment_methods,
+            is_new,
+            accept_trade,
+        });
+        
+    } catch (error) {
+        console.log(error);
+    }finally{
+        setIsLoading(false)
+    }
+        
+        // try {
+        //     const numberPrice = parseInt(props.price)
+
+        //     const product = await api.post("/products", {
+
+        //         name: props.name,
+        //         description: props.description,
+        //         is_new: props.is_new,
+        //         price: numberPrice,
+        //         accept_trade: props.accept_trade,
+        //         payment_methods: props.payment_methods,
+        //     })
+        // } catch (error) {
+        //     console.log(error);
+        // } finally {
+        //     setIsLoading(false);
+        // }
+    }
+
+
+    function handleDeleteImage(imageName: string) {
+
+        const ImagesWithoutDeletedOne = ProductImages.filter(img => { return img !== imageName })
+        setProductImages(ImagesWithoutDeletedOne)
+    }
 
 
     return (
@@ -139,6 +185,7 @@ export function CreateNewAdvertisement() {
 
 
                                         }}
+                                        onPress={() => handleDeleteImage(item)}
                                     >
                                         <XCircle weight="fill" color="#3E3A40" />
                                     </TouchableOpacity>
@@ -154,7 +201,7 @@ export function CreateNewAdvertisement() {
                                                 mt={0}
                                                 type="gray"
 
-
+                                                onPress={handleProductPhotoSelected}
                                             >
                                                 <Plus color="#888889" />
                                             </Button>
