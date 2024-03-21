@@ -34,7 +34,8 @@ const ProductSchema = yup.object({
 export function CreateNewAdvertisement() {
     const PHOTO_SIZE = 100
 
-    const [ProductImages, setProductImages] = useState(['add'])
+    const [ProductImages, setProductImages] = useState<any[]>(['add'])
+    const [imagesFiles, setImagesFiles] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(false)
     const [trade, setTrade] = useState(false);
     const { user } = useAuth()
@@ -74,6 +75,9 @@ export function CreateNewAdvertisement() {
                 setProductImages((image) =>  {
                     return [imageSelected.assets[0].uri, ...image,]
                 })
+                setImagesFiles((file) =>  {
+                    return [...file, imageFile]
+                })
 
 
             }
@@ -90,7 +94,7 @@ export function CreateNewAdvertisement() {
         try {
             const numberPrice = parseInt(price)
 
-            if (ProductImages.length === 1) {
+            if (imagesFiles.length === 0) {
                 return toast.show({
                 title: 'Selecione pelo menos uma imagem',
                 placement: 'top',
@@ -98,9 +102,10 @@ export function CreateNewAdvertisement() {
             })
         }
         
-        
+       
+        console.log(imagesFiles);
         navigator.navigate('ProductPreview', {
-            images: ProductImages,
+            images: imagesFiles,
             name,
             description,
             price: numberPrice,

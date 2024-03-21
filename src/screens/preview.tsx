@@ -20,6 +20,8 @@ export function ProductPreview() {
     const { user } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
 
+
+
     async function handlePublishProduct() {
         setIsLoading(true)
         try {
@@ -34,27 +36,29 @@ export function ProductPreview() {
                 payment_methods: Props.payment_methods,
             })
 
+            //Upload Image
+            
+            
             const ImagesData = new FormData();
-           Props.images.forEach((image) => {
-            const ImageFile = {
-                ...image,
-                 name: `${user.id}_${image.name}`,
-            } as any
-            ImagesData.append('images', ImageFile)
-        })
+            Props.images.forEach((image) => {
+                const ImageFile = {
+                    ...image,
+                    name: `${user.name}_${image.name}`,
+                } as any
+                ImagesData.append('images', ImageFile)
+            })
 
-        ImagesData.append('product_id' , product.data.id);
-
-        const imageUpload = await api.post("products/images", {
-            product_id: product.data.id,
-            images: ImagesData,
-        }, {
-            headers: {
-                'Content-Type':'multipart/form-data',
-            }
-        })
-
+            ImagesData.append('product_id', product.data.id);
+            console.log(ImagesData);
+            const imageUpload = await api.post("products/images",ImagesData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            })
+           
+            
         } catch (error) {
+            
             return console.log(error);
         } finally {
             setIsLoading(false)
@@ -89,7 +93,7 @@ export function ProductPreview() {
                                 return (
                                     <>
                                         <Image
-                                            source={{ uri: item }}
+                                            source={{ uri: item.uri }}
                                             alt="Product image"
                                             w={widthScreen}
                                             h={280}
