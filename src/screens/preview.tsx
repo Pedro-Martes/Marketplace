@@ -55,7 +55,8 @@ export function ProductPreview() {
                     'Content-Type': 'multipart/form-data',
                 }
             })
-           
+
+           navigator.navigate('MyAdvertisement')
             
         } catch (error) {
             
@@ -138,7 +139,7 @@ export function ProductPreview() {
 
                     </HStack>
 
-                    <Subtitle text={`R$ ${Props.price}`} mt={3} />
+                    <Subtitle text={`${Props.description}`} mt={3} />
                     <HStack mt={8} mb={4}>
                         <Subtitle text="Aceita Troca?" fontWeight={'bold'} mr={2} />
                         <Subtitle text={Props.accept_trade ? 'Sim' : 'Não'} />

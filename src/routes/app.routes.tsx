@@ -9,19 +9,19 @@ import { SignIn } from "../screens/SingIn";
 import { useAuth } from "../hooks/useAuth";
 import { Logout } from "../screens/Logout";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import {  CreateNewAdvertisement} from "../screens/CreateNewAdvertisement";
+import { CreateNewAdvertisement } from "../screens/CreateNewAdvertisement";
 import { ProductPreview } from "../screens/preview";
-import { ProductDTO } from "../dtos/ProductDTO";
+import { ProductPropsDTO } from "../dtos/ProductDTO";
 
 
 type AppRoutes = {
     Home: undefined,
-    myAdvertisement: undefined,
+    MyAdvertisement: undefined,
     logOut: undefined,
-    Product: undefined,
+    Product: ProductPropsDTO,
     MyProduct: undefined
     CreateNewAdvertisement: undefined,
-    ProductPreview: ProductDTO,
+    ProductPreview: ProductPropsDTO,
 
 }
 
@@ -69,7 +69,7 @@ export function AppRoutes() {
                 />
 
                 <Screen
-                    name="myAdvertisement"
+                    name="MyAdvertisement"
                     component={MyAdvertisement}
                     options={{
                         tabBarIcon: ({ color }) => (
@@ -91,17 +91,20 @@ export function AppRoutes() {
                     }}
                 />
 
-                <Screen 
-                name="CreateNewAdvertisement"
-                component={CreateNewAdvertisement}
-                options={{tabBarButton: ()=> null}}
+                <Screen
+                    name="CreateNewAdvertisement"
+                    component={CreateNewAdvertisement}
+                    options={{ tabBarButton: () => null }}
                 />
                 <Screen
-                name="ProductPreview"
-                component={ProductPreview}
-                options={{tabBarButton: ()=> null}}
-                
+                    name="ProductPreview"
+                    component={ProductPreview}
+                    options={{ tabBarButton: () => null }}
+
                 />
+                
+
+              
 
 
 

@@ -1,60 +1,42 @@
-import { Center, CheckIcon, FlatList, HStack, Select, VStack,Text } from "native-base";
+import { Center, CheckIcon, FlatList, HStack, Select, VStack, Text } from "native-base";
 import { Title } from "../components/title";
 import { Check, Plus } from "phosphor-react-native";
 import { TouchableOpacity } from "react-native";
 import { Subtitle } from "../components/subtitle";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductCard } from "../components/ProductCard";
+import { api } from "../services/api";
+import { Loading } from "../components/loading";
+import { ProductPropsDTO } from "../dtos/ProductDTO";
 
-interface MyAdvertisementProps {
 
-}
-export function MyAdvertisement(props: MyAdvertisementProps) {
+export function MyAdvertisement() {
     const [service, setService] = useState("Todos")
-
-    const Product = [
-        {
-            id: 1,
-            ImageUri: ['https://source.unsplash.com/random/800x600', 
-            'https://source.unsplash.com/random/800x600', 
-            'https://source.unsplash.com/random/800x600'],
-            title: 'Tênis Vermelho',
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. A consequuntur cum ducimus possimus. Voluptatum aliquam adipisci labore dignissimos quis saepe illum, molestias excepturi, nesciunt minima quos ratione soluta sequi cum?',
-            seller: 'Vinícius Morais',
-            status: 'Novo',
-            price: 100.90,
-            troca: true,
-            boleto: true,
-            pix: true,
-            dinheiro: true,
-            deposito: true,
-            credito: true,
-            ativo: false,
-
-        },
-        {
-            id: 2,
-            ImageUri: ['https://source.unsplash.com/random/800x600', 
-            'https://source.unsplash.com/random/800x600', 
-            'https://source.unsplash.com/random/800x600'],
-
-            title: 'Bicicleta',
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. A consequuntur cum ducimus possimus. Voluptatum aliquam adipisci labore dignissimos quis saepe illum, molestias excepturi, nesciunt minima quos ratione soluta sequi cum?',
-            seller: 'Maria Souza',
-            status: 'usado',
-            price: 250.90,
-            troca: true,
-            boleto: true,
-            pix: true,
-            dinheiro: true,
-            deposito: true,
-            credito: true,
-            ativo: true,
+    const [isLoading, setIsLoading] = useState(false)
+    const [userProducts, setUserProducts] = useState<ProductPropsDTO[]>([])
 
 
+  
+
+    async function fetchUserProducts() {
+        setIsLoading(true);
+        try {
+            const fetchUserProducts:any = await api.get('/users/products')
+            console.log(fetchUserProducts.data);
+           setUserProducts(fetchUserProducts.data)
+
+        } catch (error) {
+            console.log("Myproducts error: " + error);
+        } finally {
+            setIsLoading(false)
         }
-    ]
+    }
 
+
+
+    useEffect(() => {
+        fetchUserProducts()
+    }, [])
 
 
 
@@ -73,7 +55,7 @@ export function MyAdvertisement(props: MyAdvertisementProps) {
             </HStack>
 
             <HStack mt={58}>
-                <Subtitle text={`${Product.length} anúncios`} flex={1} />
+                <Subtitle text={`${userProducts.length} anúncios`} flex={1} />
 
 
                 <Select selectedValue={service} minWidth={111} accessibilityLabel="Choose Service" placeholder="Choose Service" _selectedItem={{
@@ -88,21 +70,27 @@ export function MyAdvertisement(props: MyAdvertisementProps) {
 
                 </Select>
             </HStack>
-                    
+
+            {isLoading ?
+
+                <Loading />
+                : 
             <FlatList
-                data={Product}
-                keyExtractor={(item) => item.id.toString()}
-               numColumns={2}
-                renderItem={({ item }) => {
-                    return (
-                        <>
-                         <ProductCard data={item} />
+            data={userProducts}
+            keyExtractor={(item, index) => index.toString()}
+            numColumns={2}
+            renderItem={({ item }) => {
+                console.log(item);
+                return (
+                    <>
+                            <ProductCard data={item} />
                         </>
                     )
                 }
             }
-        />
-  
+            />
+
+        }
 
         </VStack>
 
