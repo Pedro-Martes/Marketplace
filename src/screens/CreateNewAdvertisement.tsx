@@ -103,12 +103,12 @@ export function CreateNewAdvertisement() {
         }
         
        
-        console.log(imagesFiles);
+     
         navigator.navigate('ProductPreview', {
-            images: imagesFiles,
+            product_images: imagesFiles,
             name,
             description,
-            price: numberPrice,
+            price: numberPrice.toString(),
             payment_methods,
             is_new,
             accept_trade,

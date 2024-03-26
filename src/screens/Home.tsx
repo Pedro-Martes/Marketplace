@@ -38,7 +38,6 @@ export function Home() {
     async function fetchProducts(){
         try {
             const response = await api.get('/products')
-            console.log(response.data);
             setProduct(response.data)
         } catch (error) {
             console.log(error);

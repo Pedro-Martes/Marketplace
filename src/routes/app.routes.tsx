@@ -12,6 +12,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { CreateNewAdvertisement } from "../screens/CreateNewAdvertisement";
 import { ProductPreview } from "../screens/preview";
 import { ProductPropsDTO } from "../dtos/ProductDTO";
+import { MyProduct } from "../screens/myProduct";
 
 
 type AppRoutes = {
@@ -102,6 +103,13 @@ export function AppRoutes() {
                     options={{ tabBarButton: () => null }}
 
                 />
+                <Screen
+                    name="MyProduct"
+                    component={MyProduct}
+                    options={{ tabBarButton: () => null }}
+
+                />
+                
                 
 
               

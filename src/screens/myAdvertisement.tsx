@@ -8,22 +8,33 @@ import { ProductCard } from "../components/ProductCard";
 import { api } from "../services/api";
 import { Loading } from "../components/loading";
 import { ProductPropsDTO } from "../dtos/ProductDTO";
+import { useNavigation } from "@react-navigation/native";
 
 
 export function MyAdvertisement() {
-    const [service, setService] = useState("Todos")
+    const [filter, setFilter] = useState("Todos")
     const [isLoading, setIsLoading] = useState(false)
     const [userProducts, setUserProducts] = useState<ProductPropsDTO[]>([])
+    const navigator = useNavigation()
 
 
-  
 
     async function fetchUserProducts() {
         setIsLoading(true);
         try {
-            const fetchUserProducts:any = await api.get('/users/products')
-            console.log(fetchUserProducts.data);
-           setUserProducts(fetchUserProducts.data)
+            const fetchUserProducts: any = await api.get('/users/products')
+            if (filter === "Ativos") {
+                const filteredProducts = fetchUserProducts.data.filter(newProducts => { return newProducts.is_active === true })
+                return setUserProducts(filteredProducts)
+            }
+
+            if (filter === "Inativos") {
+                console.log('ppssei  queried');
+                const filteredProducts = fetchUserProducts.data.filter(newProducts => { return newProducts.is_active === false })
+                return setUserProducts(filteredProducts)
+            }
+
+            setUserProducts(fetchUserProducts.data)
 
         } catch (error) {
             console.log("Myproducts error: " + error);
@@ -32,11 +43,15 @@ export function MyAdvertisement() {
         }
     }
 
+    function handleProductCard(productId: string) {
+        navigator.navigate('MyProduct', productId)
+    }
+
 
 
     useEffect(() => {
         fetchUserProducts()
-    }, [])
+    }, [filter])
 
 
 
@@ -58,12 +73,12 @@ export function MyAdvertisement() {
                 <Subtitle text={`${userProducts.length} anúncios`} flex={1} />
 
 
-                <Select selectedValue={service} minWidth={111} accessibilityLabel="Choose Service" placeholder="Choose Service" _selectedItem={{
+                <Select selectedValue={filter} minWidth={111} accessibilityLabel="Choose Service" placeholder="Choose Service" _selectedItem={{
                     bg: "blue.primary",
                     endIcon: <Check color="#ffff" />,
                     borderRadius: 'md'
 
-                }} mt={1} onValueChange={itemValue => setService(itemValue)}>
+                }} mt={1} onValueChange={itemValue => setFilter(itemValue)}>
                     <Select.Item label="Todos" value="Todos" />
                     <Select.Item label="Ativos" value="Ativos" />
                     <Select.Item label="Inativos" value="Inativos" />
@@ -74,23 +89,24 @@ export function MyAdvertisement() {
             {isLoading ?
 
                 <Loading />
-                : 
-            <FlatList
-            data={userProducts}
-            keyExtractor={(item, index) => index.toString()}
-            numColumns={2}
-            renderItem={({ item }) => {
-                console.log(item);
-                return (
-                    <>
-                            <ProductCard data={item} />
-                        </>
-                    )
-                }
-            }
-            />
+                :
 
-        }
+                <FlatList
+                    data={userProducts}
+                    keyExtractor={(item, index) => item.id}
+                    numColumns={2}
+                    renderItem={({ item }) => {
+                        if (item == undefined) { return <Subtitle text="Você ainda não possui nenhum anuncio" /> }
+                        return (
+                            <>
+                                <ProductCard data={item} onPress={() => handleProductCard(item.id)} />
+                            </>
+                        )
+                    }
+                    }
+                />
+
+            }
 
         </VStack>
 
