@@ -20,7 +20,7 @@ type AppRoutes = {
     MyAdvertisement: undefined,
     logOut: undefined,
     Product: ProductPropsDTO,
-    MyProduct: undefined
+    MyProduct: {id: string}
     CreateNewAdvertisement: undefined,
     ProductPreview: ProductPropsDTO,
 

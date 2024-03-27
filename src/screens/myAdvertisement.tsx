@@ -9,13 +9,14 @@ import { api } from "../services/api";
 import { Loading } from "../components/loading";
 import { ProductPropsDTO } from "../dtos/ProductDTO";
 import { useNavigation } from "@react-navigation/native";
+import { AppNavigatorRoutesProps } from "../routes/app.routes";
 
 
 export function MyAdvertisement() {
     const [filter, setFilter] = useState("Todos")
     const [isLoading, setIsLoading] = useState(false)
     const [userProducts, setUserProducts] = useState<ProductPropsDTO[]>([])
-    const navigator = useNavigation()
+    const navigator = useNavigation<AppNavigatorRoutesProps>()
 
 
 
@@ -44,7 +45,9 @@ export function MyAdvertisement() {
     }
 
     function handleProductCard(productId: string) {
-        navigator.navigate('MyProduct', productId)
+        navigator.navigate('MyProduct', {
+            id: productId,
+        })
     }
 
 

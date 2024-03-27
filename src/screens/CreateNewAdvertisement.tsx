@@ -42,7 +42,7 @@ export function CreateNewAdvertisement() {
     const toast = useToast()
     const navigator = useNavigation<AppNavigatorRoutesProps>()
 
-    const { control, handleSubmit, formState: { errors } } = useForm<ProductPropsDTO>({
+    const { control, handleSubmit, formState: { errors } } = useForm<ProductPropsDTO | any>({
         resolver: yupResolver(ProductSchema),
     })
 
@@ -72,10 +72,10 @@ export function CreateNewAdvertisement() {
                     type: `${imageSelected.assets[0].type}/${imageExtension}`,
                 } as any
 
-                setProductImages((image) =>  {
+                setProductImages((image) => {
                     return [imageSelected.assets[0].uri, ...image,]
                 })
-                setImagesFiles((file) =>  {
+                setImagesFiles((file) => {
                     return [...file, imageFile]
                 })
 
@@ -96,325 +96,306 @@ export function CreateNewAdvertisement() {
 
             if (imagesFiles.length === 0) {
                 return toast.show({
-                title: 'Selecione pelo menos uma imagem',
-                placement: 'top',
-                bgColor: 'red.500',
-            })
+                    title: 'Selecione pelo menos uma imagem',
+                    placement: 'top',
+                    bgColor: 'red.500',
+                })
+            }
+
+
+
+            navigator.navigate('ProductPreview', {
+                product_images: imagesFiles,
+                name,
+                description,
+                price: numberPrice.toString(),
+                payment_methods,
+                is_new,
+                accept_trade,
+            });
+
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false)
         }
-        
-       
-     
-        navigator.navigate('ProductPreview', {
-            product_images: imagesFiles,
-            name,
-            description,
-            price: numberPrice.toString(),
-            payment_methods,
-            is_new,
-            accept_trade,
-        });
-        
-    } catch (error) {
-        console.log(error);
-    }finally{
-        setIsLoading(false)
-    }
-        
-        // try {
-        //     const numberPrice = parseInt(props.price)
-
-        //     const product = await api.post("/products", {
-
-        //         name: props.name,
-        //         description: props.description,
-        //         is_new: props.is_new,
-        //         price: numberPrice,
-        //         accept_trade: props.accept_trade,
-        //         payment_methods: props.payment_methods,
-        //     })
-        // } catch (error) {
-        //     console.log(error);
-        // } finally {
-        //     setIsLoading(false);
-        // }
-    }
 
 
-    function handleDeleteImage(imageName: string) {
+        function handleDeleteImage(imageName: string) {
 
-        const ImagesWithoutDeletedOne = ProductImages.filter(img => { return img !== imageName })
-        setProductImages(ImagesWithoutDeletedOne)
-    }
+            const ImagesWithoutDeletedOne = ProductImages.filter(img => { return img !== imageName })
+            setProductImages(ImagesWithoutDeletedOne)
+        }
 
 
-    return (
-        <ScrollView bg={'gray.200'} flex={1}>
-            <VStack px={6} mb={8} >
+        return (
+            <ScrollView bg={'gray.200'} flex={1}>
+                <VStack px={6} mb={8} >
 
-                <HStack mt={16} alignItems={'center'} justifyContent={'center'}>
-                    <TouchableOpacity >
-                        <ArrowLeft />
-                    </TouchableOpacity>
+                    <HStack mt={16} alignItems={'center'} justifyContent={'center'}>
+                        <TouchableOpacity >
+                            <ArrowLeft />
+                        </TouchableOpacity>
 
-                    <Title text="Criar anúncio" fontSize={20} textAlign={'center'} w={'100%'} />
-                </HStack>
+                        <Title text="Criar anúncio" fontSize={20} textAlign={'center'} w={'100%'} />
+                    </HStack>
 
-                <Subtitle text="Imagens" mt={6} fontWeight={'bold'} fontSize={16} />
-                <Subtitle text="Escolha até 3 imagens para mostrar o quando o seu produto é incrível!" />
+                    <Subtitle text="Imagens" mt={6} fontWeight={'bold'} fontSize={16} />
+                    <Subtitle text="Escolha até 3 imagens para mostrar o quando o seu produto é incrível!" />
 
-                <HStack mt={'16px'} alignItems={'center'}>
+                    <HStack mt={'16px'} alignItems={'center'}>
 
-                    <FlatList
-                        data={ProductImages}
-                        keyExtractor={(item) => item}
-                        numColumns={3}
-                        mr={1.5}
-                        scrollEnabled={false}
+                        <FlatList
+                            data={ProductImages}
+                            keyExtractor={(item) => item}
+                            numColumns={3}
+                            mr={1.5}
+                            scrollEnabled={false}
 
-                        renderItem={({ item }) => (
-                            item !== 'add' ?
-                                <View style={{ width: PHOTO_SIZE, marginRight: 8 }}>
-                                    <Image
-                                        source={{ uri: item }}
-                                        alt=''
-                                        w={PHOTO_SIZE}
-                                        h={PHOTO_SIZE}
-                                        rounded={6}
+                            renderItem={({ item }) => (
+                                item !== 'add' ?
+                                    <View style={{ width: PHOTO_SIZE, marginRight: 8 }}>
+                                        <Image
+                                            source={{ uri: item }}
+                                            alt=''
+                                            w={PHOTO_SIZE}
+                                            h={PHOTO_SIZE}
+                                            rounded={6}
 
-                                    />
-                                    <TouchableOpacity
-                                        style={{
-                                            position: 'absolute',
-                                            right: 0,
+                                        />
+                                        <TouchableOpacity
+                                            style={{
+                                                position: 'absolute',
+                                                right: 0,
 
 
 
-                                        }}
-                                        onPress={() => handleDeleteImage(item)}
-                                    >
-                                        <XCircle weight="fill" color="#3E3A40" />
-                                    </TouchableOpacity>
-                                </View>
-                                : <>
-                                    {
-                                        ProductImages.length < 4 ?
+                                            }}
+                                            onPress={() => handleDeleteImage(item)}
+                                        >
+                                            <XCircle weight="fill" color="#3E3A40" />
+                                        </TouchableOpacity>
+                                    </View>
+                                    : <>
+                                        {
+                                            ProductImages.length < 4 ?
 
 
-                                            <Button
-                                                w={PHOTO_SIZE}
-                                                h={PHOTO_SIZE}
-                                                mt={0}
-                                                type="gray"
+                                                <Button
+                                                    w={PHOTO_SIZE}
+                                                    h={PHOTO_SIZE}
+                                                    mt={0}
+                                                    type="gray"
 
-                                                onPress={handleProductPhotoSelected}
-                                            >
-                                                <Plus color="#888889" />
-                                            </Button>
+                                                    onPress={handleProductPhotoSelected}
+                                                >
+                                                    <Plus color="#888889" />
+                                                </Button>
 
-                                            : null
-                                    }
-                                </>
-                        )}
-                        contentContainerStyle={{ flexGrow: 1, }}
-                    />
-                </HStack>
-
-                <Title text="Sobre o Produto" mt={'32px'} mb={3} />
-
-                {/* ⬇ Name Input ⬇ */}
-                <Controller
-                    control={control}
-                    name='name'
-                    render={({ field: { onChange, value } }) => (
-                        <Input
-                            placeholder="Título do anúncio"
-                            onChangeText={onChange}
-                            value={value}
-                            isRequired
-                            errorMessage={errors.name?.message}
-
+                                                : null
+                                        }
+                                    </>
+                            )}
+                            contentContainerStyle={{ flexGrow: 1, }}
                         />
-                    )}
-                />
+                    </HStack>
 
-                {/* ⬇ Description Input ⬇ */}
-                <Controller
-                    control={control}
-                    name='description'
-                    render={({ field: { onChange, value } }) => (
-                        <TextArea
-                            autoCompleteType={false}
-                            placeholder="Descrição completa do produto (opcional)"
-                            mt={3}
-                            backgroundColor={'white'}
-                            borderWidth={0}
-                            fontSize={'md'}
-                            fontFamily={'body'}
-                            placeholderTextColor={'gray.300'}
-                            _focus={{
-                                borderWidth: '1px',
-                                borderColor: 'gray.300',
-                                bg: "white"
-                            }}
-                            onChangeText={onChange}
-                            value={value}
+                    <Title text="Sobre o Produto" mt={'32px'} mb={3} />
 
-                        />
-                    )}
-                />
-
-                {/* ⬇ Is_new Radio Buttons ⬇ */}
-                <Controller
-                    control={control}
-                    name='is_new'
-                    render={({ field: { onChange, value = 'true' } }) => (
-                        <Radio.Group
-                            name="is_new"
-                            value={value}
-                            flex={1}
-                            onChange={onChange}
-
-                        >
-
-
-                            <HStack>
-                                <Radio
-
-                                    value='true'
-                                    mt={3}
-                                    alignItems={'center'}
-                                    _text={{ color: 'gray.500' }}
-                                    _icon={{
-                                        color: 'blue.primary',
-                                        borderColor: 'blue.primary',
-                                        size: 3,
-                                    }}
-                                    _checked={{
-                                        borderColor: 'blue.primary',
-
-                                    }}
-
-                                >
-                                    <Text mt={3} color={'gray.400'} fontSize={16} fontFamily={'body'} mr={'20px'}>Produto Novo</Text>
-                                </Radio>
-
-                                <Radio
-                                    value='false'
-                                    mt={3}
-                                    alignItems={'center'}
-                                    _text={{ color: 'gray.500' }}
-                                    _icon={{
-                                        color: 'blue.primary',
-                                        borderColor: 'blue.primary',
-                                        size: 3,
-                                    }}
-                                    _checked={{
-                                        borderColor: 'blue.primary',
-
-                                    }}
-                                    ml={'20px'}
-
-                                >
-
-                                    <Text mt={3} color={'gray.400'} fontSize={16} fontFamily={'body'} >Produto Usado</Text>
-
-                                </Radio>
-
-                            </HStack>
-                        </Radio.Group>
-                    )}
-
-                />
-
-
-                {/* ⬇ Price Input ⬇ */}
-                <Title text="Venda" mt={'32px'} />
-                <Title text={errors.price?.message ? errors.price?.message : ''} color={'red.500'} />
-                <Controller
-                    control={control}
-                    name="price"
-                    render={({ field: { onChange, value } }) => (
-                        <HStack background={'white'} alignItems={'center'} rounded={10} px={5} mt={3}>
-
-                            <Title text="R$" fontWeight={'hairline'} mt={0} />
+                    {/* ⬇ Name Input ⬇ */}
+                    <Controller
+                        control={control}
+                        name='name'
+                        render={({ field: { onChange, value } }) => (
                             <Input
-                                placeholder={"Valor do produto"}
-                                keyboardType="decimal-pad"
+                                placeholder="Título do anúncio"
+                                onChangeText={onChange}
+                                value={value}
+                                isRequired
+                                errorMessage={errors.name?.message}
+
+                            />
+                        )}
+                    />
+
+                    {/* ⬇ Description Input ⬇ */}
+                    <Controller
+                        control={control}
+                        name='description'
+                        render={({ field: { onChange, value } }) => (
+                            <TextArea
+                                autoCompleteType={false}
+                                placeholder="Descrição completa do produto (opcional)"
+                                mt={3}
+                                backgroundColor={'white'}
+                                borderWidth={0}
+                                fontSize={'md'}
+                                fontFamily={'body'}
+                                placeholderTextColor={'gray.300'}
+                                _focus={{
+                                    borderWidth: '1px',
+                                    borderColor: 'gray.300',
+                                    bg: "white"
+                                }}
                                 onChangeText={onChange}
                                 value={value}
 
                             />
+                        )}
+                    />
 
-
-                        </HStack>
-                    )}
-
-                />
-
-                {/* ⬇ Trade Switch ⬇ */}
-                <Controller
-                    control={control}
-                    name="accept_trade"
-                    render={({ field: { onChange, value = false } }) => (
-                        <>
-                            <Title text="Aceita troca?" mt={3} mb={3} />
-                            <ToggleSwitch
-                                isOn={value}
-                                onColor={'#647AC7'}
-                                offColor={'#d9d8da'}
-                                onToggle={onChange}
-                                animationSpeed={200}
-
-
-
-                            />
-                        </>
-                    )
-                    }
-
-                />
-
-                <Controller
-                    control={control}
-                    name="payment_methods"
-                    render={({ field: { onChange, value } }) => (
-                        <>
-                            <Title text={errors.payment_methods?.message} />
-                            <Title text="Meios de pagamento aceitos" mt={3} />
-
-                            <Checkbox.Group
+                    {/* ⬇ Is_new Radio Buttons ⬇ */}
+                    <Controller
+                        control={control}
+                        name='is_new'
+                        render={({ field: { onChange, value = 'true' } }) => (
+                            <Radio.Group
+                                name="is_new"
                                 value={value}
+                                flex={1}
                                 onChange={onChange}
+
                             >
 
-                                <Check
-                                    value={'boleto'}
-                                    title={"Boleto"}
-                                    mt={3}
+
+                                <HStack>
+                                    <Radio
+
+                                        value='true'
+                                        mt={3}
+                                        alignItems={'center'}
+                                        _text={{ color: 'gray.500' }}
+                                        _icon={{
+                                            color: 'blue.primary',
+                                            borderColor: 'blue.primary',
+                                            size: 3,
+                                        }}
+                                        _checked={{
+                                            borderColor: 'blue.primary',
+
+                                        }}
+
+                                    >
+                                        <Text mt={3} color={'gray.400'} fontSize={16} fontFamily={'body'} mr={'20px'}>Produto Novo</Text>
+                                    </Radio>
+
+                                    <Radio
+                                        value='false'
+                                        mt={3}
+                                        alignItems={'center'}
+                                        _text={{ color: 'gray.500' }}
+                                        _icon={{
+                                            color: 'blue.primary',
+                                            borderColor: 'blue.primary',
+                                            size: 3,
+                                        }}
+                                        _checked={{
+                                            borderColor: 'blue.primary',
+
+                                        }}
+                                        ml={'20px'}
+
+                                    >
+
+                                        <Text mt={3} color={'gray.400'} fontSize={16} fontFamily={'body'} >Produto Usado</Text>
+
+                                    </Radio>
+
+                                </HStack>
+                            </Radio.Group>
+                        )}
+
+                    />
+
+
+                    {/* ⬇ Price Input ⬇ */}
+                    <Title text="Venda" mt={'32px'} />
+                    <Title text={errors.price?.message ? errors.price?.message : ''} color={'red.500'} />
+                    <Controller
+                        control={control}
+                        name="price"
+                        render={({ field: { onChange, value } }) => (
+                            <HStack background={'white'} alignItems={'center'} rounded={10} px={5} mt={3}>
+
+                                <Title text="R$" fontWeight={'hairline'} mt={0} />
+                                <Input
+                                    placeholder={"Valor do produto"}
+                                    keyboardType="decimal-pad"
+                                    onChangeText={onChange}
+                                    value={value}
+
                                 />
-                                <Check
-                                    value={"pix"}
-                                    title={"Pix"}
-                                    mt={3}
+
+
+                            </HStack>
+                        )}
+
+                    />
+
+                    {/* ⬇ Trade Switch ⬇ */}
+                    <Controller
+                        control={control}
+                        name="accept_trade"
+                        render={({ field: { onChange, value = false } }) => (
+                            <>
+                                <Title text="Aceita troca?" mt={3} mb={3} />
+                                <ToggleSwitch
+                                    isOn={value}
+                                    onColor={'#647AC7'}
+                                    offColor={'#d9d8da'}
+                                    onToggle={onChange}
+                                    animationSpeed={200}
+
+
+
                                 />
+                            </>
+                        )
+                        }
 
-                                <Check
-                                    value={"cash"}
-                                    title={"Dinheiro"}
-                                    mt={3}
-                                />
-                                <Check
-                                    value={"card"}
-                                    title={"Cartão de Crédito"}
-                                    mt={3}
-                                />
+                    />
 
-                            </Checkbox.Group>
+                    <Controller
+                        control={control}
+                        name="payment_methods"
+                        render={({ field: { onChange, value } }) => (
+                            <>
+                                <Title text={errors.payment_methods?.message} />
+                                <Title text="Meios de pagamento aceitos" mt={3} />
 
-                        </>
+                                <Checkbox.Group
+                                    value={value}
+                                    onChange={onChange}
+                                >
 
-                    )}
-                />
+                                    <Check
+                                        value={'boleto'}
+                                        title={"Boleto"}
+                                        mt={3}
+                                    />
+                                    <Check
+                                        value={"pix"}
+                                        title={"Pix"}
+                                        mt={3}
+                                    />
+
+                                    <Check
+                                        value={"cash"}
+                                        title={"Dinheiro"}
+                                        mt={3}
+                                    />
+                                    <Check
+                                        value={"card"}
+                                        title={"Cartão de Crédito"}
+                                        mt={3}
+                                    />
+
+                                </Checkbox.Group>
+
+                            </>
+
+                        )}
+                    />
 
 
 
@@ -423,17 +404,17 @@ export function CreateNewAdvertisement() {
 
 
 
-            </VStack >
-            <HStack background={'white'} flex={1} py={6} justifyContent={'center'}>
-                <Button type="gray" mr={6} mt={0} py={3} px={12}>Cancelar</Button>
-                <Button type="black" mt={0} py={3} px={12} onPress={handleSubmit(handleNewProduct)} isLoading={isLoading}>Avançar</Button>
+                </VStack >
+                <HStack background={'white'} flex={1} py={6} justifyContent={'center'}>
+                    <Button type="gray" mr={6} mt={0} py={3} px={12}>Cancelar</Button>
+                    <Button type="black" mt={0} py={3} px={12} onPress={handleSubmit(handleNewProduct)} isLoading={isLoading}>Avançar</Button>
 
-            </HStack>
-        </ScrollView>
-    )
+                </HStack>
+            </ScrollView>
+        )
+
+    }
+
+    LogBox.ignoreLogs([
+        "We can not support a function callback. See Github Issues for details https://github.com/adobe/react-spectrum/issues/2320"])
 }
-
-// Procurando solução
-LogBox.ignoreLogs([
-    "We can not support a function callback. See Github Issues for details https://github.com/adobe/react-spectrum/issues/2320",
-]);
