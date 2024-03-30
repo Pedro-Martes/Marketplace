@@ -30,7 +30,7 @@ export function MyAdvertisement() {
             }
 
             if (filter === "Inativos") {
-                console.log('ppssei  queried');
+               
                 const filteredProducts = fetchUserProducts.data.filter(newProducts => { return newProducts.is_active === false })
                 return setUserProducts(filteredProducts)
             }

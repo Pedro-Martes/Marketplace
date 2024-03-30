@@ -86,6 +86,7 @@ export function CreateNewAdvertisement() {
             console.log(error);
         }
     }
+    console.log('oi');
 
     async function handleNewProduct({ name, price, payment_methods, is_new, description, accept_trade }: ProductPropsDTO) {
 
@@ -108,7 +109,7 @@ export function CreateNewAdvertisement() {
                 product_images: imagesFiles,
                 name,
                 description,
-                price: numberPrice.toString(),
+                price: numberPrice,
                 payment_methods,
                 is_new,
                 accept_trade,
@@ -119,7 +120,7 @@ export function CreateNewAdvertisement() {
         } finally {
             setIsLoading(false)
         }
-
+    }
 
         function handleDeleteImage(imageName: string) {
 
@@ -417,4 +418,3 @@ export function CreateNewAdvertisement() {
 
     LogBox.ignoreLogs([
         "We can not support a function callback. See Github Issues for details https://github.com/adobe/react-spectrum/issues/2320"])
-}

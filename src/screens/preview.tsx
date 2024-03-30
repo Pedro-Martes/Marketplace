@@ -9,6 +9,7 @@ import { ProductPropsDTO } from "../dtos/ProductDTO";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useAuth } from "../hooks/useAuth";
 import { api } from "../services/api";
+import { AppNavigatorRoutesProps } from "../routes/app.routes";
 
 
 export function ProductPreview() {
@@ -16,7 +17,7 @@ export function ProductPreview() {
     const [imageCounter, setImageCounter] = useState(1);
     const route = useRoute()
     const Props = route.params as ProductPropsDTO
-    const navigator = useNavigation()
+    const navigator = useNavigation<AppNavigatorRoutesProps>()
     const { user } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
 
@@ -40,7 +41,7 @@ export function ProductPreview() {
             
             
             const ImagesData = new FormData();
-            Props.images.forEach((image) => {
+            Props.product_images.forEach((image) => {
                 const ImageFile = {
                     ...image,
                     name: `${user.name}_${image.name}`,
@@ -81,8 +82,8 @@ export function ProductPreview() {
 
                 <Center>
                     <FlatList
-                        data={Props.images}
-                        keyExtractor={item => item}
+                        data={Props.product_images}
+                        keyExtractor={(item, index) => index.toString()}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
                         pagingEnabled={true}
