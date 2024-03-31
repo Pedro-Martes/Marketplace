@@ -13,8 +13,8 @@ import { Loading } from "../components/loading";
 import { AppNavigatorRoutesProps } from "../routes/app.routes";
 import { IconButton } from "../components/iconButton";
 
-type RouteParms = {
-    id: string
+interface RouteParms {
+    id: string;
 }
 export function MyProduct() {
     const widthScreen = Dimensions.get('window')
@@ -41,14 +41,14 @@ export function MyProduct() {
 
     async function handleChangeAdVisibility() {
         setIsLoading(true)
-        try{
+        try {
             await api.patch(`/products/${id}`, {
-                is_active:!product?.is_active
+                is_active: !product?.is_active
             })
-            
-        }catch(error){
+
+        } catch (error) {
             console.log(error);
-        }finally{
+        } finally {
             fetchProduct()
         }
     }
@@ -57,10 +57,10 @@ export function MyProduct() {
         try {
             setIsLoading(true)
             await api.delete(`/products/${id}`)
-            
+
         } catch (error) {
             console.log(error);
-        }finally{
+        } finally {
             navigator.navigate('MyAdvertisement')
         }
     }
@@ -69,7 +69,7 @@ export function MyProduct() {
         navigator.goBack()
     }
 
-   
+
 
     useEffect(() => {
         fetchProduct()
@@ -209,16 +209,16 @@ export function MyProduct() {
             </ScrollView>
             <VStack position={'absolute'} alignItems={'center'} background={'white'} w={'100%'} bottom={0} py={3} px={4}>
 
-                    <IconButton type={product?.is_active ? 'black' : 'blue'} onPress={handleChangeAdVisibility}>
-                        <Power weight="regular" color="#ffff" />
-                        <Text ml={2} fontWeight={'bold'} color={'white'}>{product?.is_active ? 'Pausar' : 'Habilitar'} anúncio</Text>
-                    </IconButton>
+                <IconButton type={product?.is_active ? 'black' : 'blue'} onPress={handleChangeAdVisibility}>
+                    <Power weight="regular" color="#ffff" />
+                    <Text ml={2} fontWeight={'bold'} color={'white'}>{product?.is_active ? 'Pausar' : 'Habilitar'} anúncio</Text>
+                </IconButton>
 
-                    
-                    <IconButton type="gray" onPress={handleDeleteProductAd}>
-                        <Trash color="black" weight="regular"  />
-                        <Text color={'black'} fontWeight={'bold'} ml={3}>Excluir Anúncio</Text>
-                    </IconButton>
+
+                <IconButton type="gray" onPress={handleDeleteProductAd}>
+                    <Trash color="black" weight="regular" />
+                    <Text color={'black'} fontWeight={'bold'} ml={3}>Excluir Anúncio</Text>
+                </IconButton>
             </VStack>
 
         </VStack >

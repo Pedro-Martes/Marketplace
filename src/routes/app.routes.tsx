@@ -13,14 +13,15 @@ import { CreateNewAdvertisement } from "../screens/CreateNewAdvertisement";
 import { ProductPreview } from "../screens/preview";
 import { ProductPropsDTO } from "../dtos/ProductDTO";
 import { MyProduct } from "../screens/myProduct";
+import { Product } from "../screens/Product";
 
 
 type AppRoutes = {
     Home: undefined,
     MyAdvertisement: undefined,
     logOut: undefined,
-    Product: ProductPropsDTO,
-    MyProduct: {id: string}
+    Product: { id: string },
+    MyProduct: { id: string }
     CreateNewAdvertisement: undefined,
     ProductPreview: ProductPropsDTO,
 
@@ -109,10 +110,15 @@ export function AppRoutes() {
                     options={{ tabBarButton: () => null }}
 
                 />
-                
-                
+                <Screen
+                    name="Product"
+                    component={Product}
+                    options={{ tabBarButton: () => null }}
+                />
 
-              
+
+
+
 
 
 

@@ -1,53 +1,96 @@
-import defaultImage from "../assets/iconUser.png";
-import { Center, HStack, Input, ScrollView, VStack, Text, Button as ButtonNative, View, FlatList } from "native-base";
+
+import { Center, HStack, Input, ScrollView, VStack, Text, Button as ButtonNative, View, FlatList, Divider } from "native-base";
 import { Title } from "../components/title";
 import { SafeAreaView } from "react-native";
 import { UserImage } from "../components/userImage";
 import { Subtitle } from "../components/subtitle";
 import { Button } from "../components/button";
-import { ArrowFatLineRight, ArrowRight, MagnifyingGlass, Plus, Sliders, Tag } from "phosphor-react-native";
+import { ArrowFatLineRight, ArrowRight, MagnifyingGlass, Plus, Sliders, Tag, WhatsappLogo } from "phosphor-react-native";
 import { ProductCard } from "../components/ProductCard";
 import { useNavigation } from "@react-navigation/native";
-import { AppNavigatorRoutesProps, AppStackNavigatorRoutesProps } from "../routes/app.routes";
+import { AppNavigatorRoutesProps, } from "../routes/app.routes";
 import { useAuth } from "../hooks/useAuth";
 import { api } from "../services/api";
 import { useEffect, useState } from "react";
+import { ProductPropsDTO } from "../dtos/ProductDTO";
+import * as yup from 'yup'
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Loading } from "../components/loading";
 
+type FormSearch = {
+    query: string;
+}
 
+const searchSchema = yup.object({
+    query: yup.string().required('')
+})
 
 export function Home() {
     const navigation = useNavigation<AppNavigatorRoutesProps>()
     const PHOTO_SIZE = 45
-
+    const [isLoading, setIsLoading] = useState(false)
     const { user, logOut } = useAuth()
-    const [Products , setProduct] = useState()
+    const [Products, setProduct] = useState<ProductPropsDTO[]>([])
 
-
- 
-  
+    const { control, handleSubmit } = useForm<FormSearch>({
+        resolver: yupResolver(searchSchema)
+    })
 
     function handleNewAd() {
 
         navigation.navigate('CreateNewAdvertisement');
     }
 
-    function handleProduct(){
-        navigation.navigate('Product')
+    function handleProduct(productId: string) {
+        navigation.navigate('Product', {
+            id: productId
+        });
     }
 
-    async function fetchProducts(){
+    async function fetchProducts() {
+
+        setIsLoading(true)
         try {
             const response = await api.get('/products')
-            setProduct(response.data)
+            const respinseWithActiveProduct = response.data.map(product => ({ ...product, is_active: 'true' }))
+            return setProduct(respinseWithActiveProduct)
         } catch (error) {
             console.log(error);
+        } finally {
+            setIsLoading(false)
         }
     }
 
-    useEffect(()=>{
+
+    async function handleSearchProducts({ query }: FormSearch) {
+        setIsLoading(true)
+        try {
+            const response = await api.get('/products', {
+                params: {
+                    query: query
+                }
+            })
+            const respinseWithActiveProduct = response.data.map(product => ({ ...product, is_active: 'true' }))
+            return setProduct(respinseWithActiveProduct)
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    
+
+    useEffect(() => {
         fetchProducts()
     }, [])
 
+    if (isLoading) {
+        return (
+            <Loading />
+        )
+    }
 
     return (
         <>
@@ -99,18 +142,49 @@ export function Home() {
                     <Subtitle text="Compre produtos variados" mb={3} />
 
                     <HStack background={'white'} alignItems={'center'} borderRadius={5} >
+                        <Controller
+                            control={control}
+                            name="query"
+                            render={({ field: { onChange, value } }) => (
+                                <Input
+                                    placeholder="Buscar anúncio"
+                                    flex={1}
+                                    borderColor={'transparent'}
+                                    _focus={{ bg: 'transparent', borderColor: 'gray.300' }}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    InputRightElement={
+                                        <>
+                                            <ButtonNative
+                                                background={'transparent'}
+                                                my={1}
+                                                _pressed={{ bg: 'gray.200' }}
+                                                onPress={handleSubmit(handleSearchProducts)}
+                                            >
 
-                        <Input placeholder="Buscar anúncio" flex={1} borderColor={'transparent'} _focus={{ bg: 'transparent', borderColor: 'gray.300' }} />
+                                                <MagnifyingGlass weight="bold" size={20} />
 
-                        <ButtonNative background={'transparent'} _pressed={{ bg: 'gray.200' }} my={1}>
-                            <MagnifyingGlass weight="bold" size={20} />
-                        </ButtonNative>
+                                            </ButtonNative>
+                                            <Divider
+                                            orientation="vertical"
+                                            h={8}
+                                            
+                                            />
 
-                        <View w={0.4} h={'50%'} backgroundColor={'gray.400'} />
+                                            <ButtonNative background={'transparent'} _pressed={{ bg: 'gray.200' }} m={1}>
+                                                <Sliders weight="bold" size={20} />
+                                            </ButtonNative>
 
-                        <ButtonNative background={'transparent'} _pressed={{ bg: 'gray.200' }} m={1}>
-                            <Sliders weight="bold" size={20} />
-                        </ButtonNative>
+
+                                        </>
+                                    }
+                                />
+                            )}
+                        />
+
+
+
+
 
 
                     </HStack>
@@ -119,13 +193,14 @@ export function Home() {
 
                 <FlatList
                     data={Products}
-                    keyExtractor={(item) => item.id.toString()}
+                    keyExtractor={(item, index) => index.toString()}
                     numColumns={2}
                     renderItem={({ item }) => (
 
 
                         <ProductCard
                             data={item}
+                            onPress={() => handleProduct(item.id)}
 
                         />
 
