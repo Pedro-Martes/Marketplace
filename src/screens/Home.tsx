@@ -1,5 +1,5 @@
 
-import { Center, HStack, Input, ScrollView, VStack, Text, Button as ButtonNative, View, FlatList, Divider } from "native-base";
+import { Center, HStack, Input, ScrollView, VStack, Text, Button as ButtonNative, View, FlatList, Divider, Modal } from "native-base";
 import { Title } from "../components/title";
 import { SafeAreaView } from "react-native";
 import { UserImage } from "../components/userImage";
@@ -32,6 +32,7 @@ export function Home() {
     const [isLoading, setIsLoading] = useState(false)
     const { user, logOut } = useAuth()
     const [Products, setProduct] = useState<ProductPropsDTO[]>([])
+    const [openModel, setOpenModal] = useState(false)
 
     const { control, handleSubmit } = useForm<FormSearch>({
         resolver: yupResolver(searchSchema)
@@ -80,7 +81,7 @@ export function Home() {
         }
     }
 
-    
+
 
     useEffect(() => {
         fetchProducts()
@@ -166,12 +167,18 @@ export function Home() {
 
                                             </ButtonNative>
                                             <Divider
-                                            orientation="vertical"
-                                            h={8}
-                                            
+                                                orientation="vertical"
+                                                h={8}
+
                                             />
 
-                                            <ButtonNative background={'transparent'} _pressed={{ bg: 'gray.200' }} m={1}>
+                                            <ButtonNative
+                                                background={'transparent'}
+                                                _pressed={{ bg: 'gray.200' }}
+                                                m={1}
+                                                onPress={()=> setOpenModal(true)}
+                                            >
+
                                                 <Sliders weight="bold" size={20} />
                                             </ButtonNative>
 
@@ -211,7 +218,29 @@ export function Home() {
                     }}
                 />
 
+                <Modal
+                    isOpen={openModel}
+                    avoidKeyboard 
+                    onClose={() => setOpenModal(false)}
+                    size={'lg'}
+                    bottom={0}
+                    w={"100%"}
+                    justifyContent={'flex-end'}
+                >
+                    <Modal.Content
+                     w={"100%"}>
+                        <Modal.CloseButton />
+                        <Modal.Header>Filtros</Modal.Header>
 
+                        <Modal.Body>
+                            Teste de filtragem'
+                            <Button onPress={() => setOpenModal(false)}>Fechar</Button>
+                            <Input />
+                        </Modal.Body>
+
+                    </Modal.Content>
+
+                </Modal>
 
             </VStack>
         </ >
