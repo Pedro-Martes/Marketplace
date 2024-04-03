@@ -1,11 +1,11 @@
 
-import { Center, HStack, Input, ScrollView, VStack, Text, Button as ButtonNative, View, FlatList, Divider, Modal } from "native-base";
+import { Center, HStack, Input, ScrollView, VStack, Text, Button as ButtonNative, View, FlatList, Divider, Modal, Checkbox } from "native-base";
 import { Title } from "../components/title";
 import { SafeAreaView } from "react-native";
 import { UserImage } from "../components/userImage";
 import { Subtitle } from "../components/subtitle";
 import { Button } from "../components/button";
-import { ArrowFatLineRight, ArrowRight, MagnifyingGlass, Plus, Sliders, Tag, WhatsappLogo } from "phosphor-react-native";
+import { ArrowFatLineRight, ArrowRight, Check, MagnifyingGlass, Plus, Sliders, Tag, WhatsappLogo } from "phosphor-react-native";
 import { ProductCard } from "../components/ProductCard";
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps, } from "../routes/app.routes";
@@ -17,13 +17,21 @@ import * as yup from 'yup'
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Loading } from "../components/loading";
+import ToggleSwitch from "toggle-switch-react-native";
 
 type FormSearch = {
-    query: string;
+    query?: string | null;
+    is_new?: boolean | null;
+    accept_trade: boolean;
+    payment_methods?: any[] | null;
 }
 
+
 const searchSchema = yup.object({
-    query: yup.string().required('')
+    query: yup.string().nullable(),
+    is_new: yup.boolean().nullable(),
+    accept_trade: yup.boolean().default(false),
+    payment_methods: yup.array().nullable()
 })
 
 export function Home() {
@@ -65,11 +73,13 @@ export function Home() {
 
 
     async function handleSearchProducts({ query }: FormSearch) {
+
         setIsLoading(true)
         try {
             const response = await api.get('/products', {
                 params: {
-                    query: query
+                    query: query,
+
                 }
             })
             const respinseWithActiveProduct = response.data.map(product => ({ ...product, is_active: 'true' }))
@@ -153,7 +163,7 @@ export function Home() {
                                     borderColor={'transparent'}
                                     _focus={{ bg: 'transparent', borderColor: 'gray.300' }}
                                     onChangeText={onChange}
-                                    value={value}
+                                    value={value ? value : null}
                                     InputRightElement={
                                         <>
                                             <ButtonNative
@@ -176,7 +186,7 @@ export function Home() {
                                                 background={'transparent'}
                                                 _pressed={{ bg: 'gray.200' }}
                                                 m={1}
-                                                onPress={()=> setOpenModal(true)}
+                                                onPress={() => setOpenModal(true)}
                                             >
 
                                                 <Sliders weight="bold" size={20} />
@@ -203,13 +213,15 @@ export function Home() {
                     keyExtractor={(item, index) => index.toString()}
                     numColumns={2}
                     renderItem={({ item }) => (
+                        item ?
 
+                            <ProductCard
+                                data={item}
+                                onPress={() => handleProduct(item.id)}
 
-                        <ProductCard
-                            data={item}
-                            onPress={() => handleProduct(item.id)}
-
-                        />
+                            />
+                            :
+                            <Title text="Ops, não foi encontrado nenhum produto ainda..🤗" />
 
                     )}
                     showsVerticalScrollIndicator={false}
@@ -220,22 +232,88 @@ export function Home() {
 
                 <Modal
                     isOpen={openModel}
-                    avoidKeyboard 
+                    avoidKeyboard
                     onClose={() => setOpenModal(false)}
                     size={'lg'}
                     bottom={0}
                     w={"100%"}
                     justifyContent={'flex-end'}
+                    animationPreset="slide"
+
                 >
                     <Modal.Content
-                     w={"100%"}>
+                        w={"100%"}>
                         <Modal.CloseButton />
-                        <Modal.Header>Filtros</Modal.Header>
 
-                        <Modal.Body>
-                            Teste de filtragem'
-                            <Button onPress={() => setOpenModal(false)}>Fechar</Button>
+
+                        <Modal.Body  >
+                            <Center>
+
+                                <Divider h={1} w={'20%'} borderRadius={2} />
+                            </Center>
+
+                            <Text fontWeight={'bold'} fontSize={18} color={'gray.700'} mt={8}>Filtrar anúncios</Text>
+                            <Subtitle text="Condição" mt={4} />
+                            <Controller
+                                control={control}
+                                name="accept_trade"
+                                render={({ field: { onChange, value = false } }) => (
+                                    <>
+                                        <Subtitle text="Aceita troca?" mt={4} />
+                                        <ToggleSwitch
+                                            isOn={value}
+                                            onColor={'#647AC7'}
+                                            offColor={'#d9d8da'}
+                                            onToggle={onChange}
+                                            animationSpeed={200}
+                                        />
+                                    </>
+                                )}
+                            />
+
+                            <Controller
+                                control={control}
+                                name="payment_methods"
+                                render={({ field: { onChange, value } }) => (
+                                    <>
+                                        <Title text="Meios de pagamento aceitos" mt={3} />
+
+                                        <Checkbox.Group
+                                            value={value}
+                                            onChange={onChange}
+                                        >
+
+                                            <Check
+                                                value={'boleto'}
+                                                title={"Boleto"}
+                                                mt={3}
+                                            />
+                                            <Check
+                                                value={"pix"}
+                                                title={"Pix"}
+                                                mt={3}
+                                            />
+
+                                            <Check
+                                                value={"cash"}
+                                                title={"Dinheiro"}
+                                                mt={3}
+                                            />
+                                            <Check
+                                                value={"card"}
+                                                title={"Cartão de Crédito"}
+                                                mt={3}
+                                            />
+
+                                        </Checkbox.Group>
+                                    </>
+                                )}
+                            />
+
+
+                            <Button  w={'100%'} type="black" >Aplicar </Button>
                             <Input />
+
                         </Modal.Body>
 
                     </Modal.Content>
