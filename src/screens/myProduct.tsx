@@ -65,6 +65,12 @@ export function MyProduct() {
         }
     }
 
+    async function handleEditProduct(ProductId: string){
+        navigator.navigate('CreateNewAdvertisement', {
+            id: ProductId
+        })
+    }
+
     function handleGoBack() {
         navigator.goBack()
     }
@@ -95,9 +101,9 @@ export function MyProduct() {
 
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={{ margin: 10, }}  >
+                    <Button style={{ margin: 10, }}  onPress={() => {handleEditProduct(product.id)}}>
                         <PencilSimpleLine />
-                    </TouchableOpacity>
+                    </Button>
                 </HStack>
 
                 <Center>

@@ -1,11 +1,11 @@
 
-import { Center, HStack, Input, ScrollView, VStack, Text, Button as ButtonNative, View, FlatList, Divider, Modal, Checkbox } from "native-base";
+import { Center, HStack, Input, ScrollView, VStack, Text, Button as ButtonNative, View, FlatList, Divider, Modal, Checkbox, Radio } from "native-base";
 import { Title } from "../components/title";
 import { SafeAreaView } from "react-native";
 import { UserImage } from "../components/userImage";
 import { Subtitle } from "../components/subtitle";
 import { Button } from "../components/button";
-import { ArrowFatLineRight, ArrowRight, Check, MagnifyingGlass, Plus, Sliders, Tag, WhatsappLogo } from "phosphor-react-native";
+import { ArrowFatLineRight, ArrowRight, MagnifyingGlass, Plus, Sliders, SmileyMeh, Tag, WhatsappLogo } from "phosphor-react-native";
 import { ProductCard } from "../components/ProductCard";
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps, } from "../routes/app.routes";
@@ -18,20 +18,22 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Loading } from "../components/loading";
 import ToggleSwitch from "toggle-switch-react-native";
+import { Check } from "../components/checkbox";
+import { RadioButton } from "../components/radio";
 
 type FormSearch = {
     query?: string | null;
-    is_new?: boolean | null;
-    accept_trade: boolean;
+    is_new: string;
+    accept_trade: string;
     payment_methods?: any[] | null;
 }
 
 
 const searchSchema = yup.object({
     query: yup.string().nullable(),
-    is_new: yup.boolean().nullable(),
-    accept_trade: yup.boolean().default(false),
-    payment_methods: yup.array().nullable()
+    is_new: yup.string().default(null),
+    accept_trade: yup.string().default('false'),
+    payment_methods: yup.array().default(null).nullable(),
 })
 
 export function Home() {
@@ -48,7 +50,9 @@ export function Home() {
 
     function handleNewAd() {
 
-        navigation.navigate('CreateNewAdvertisement');
+        navigation.navigate('CreateNewAdvertisement', {
+            id: ''
+        });
     }
 
     function handleProduct(productId: string) {
@@ -72,14 +76,18 @@ export function Home() {
     }
 
 
-    async function handleSearchProducts({ query }: FormSearch) {
+    async function handleSearchProducts(search: FormSearch) {
+        console.log(search);
+        const trade = search.accept_trade === 'false' ? null : 'true'
 
         setIsLoading(true)
         try {
             const response = await api.get('/products', {
                 params: {
-                    query: query,
-
+                    query: search.query,
+                    accept_trade: trade,
+                    is_new: search.is_new === 'all' ? null : search.is_new,
+                    payment_methods: search.payment_methods ? search.payment_methods : null,
                 }
             })
             const respinseWithActiveProduct = response.data.map(product => ({ ...product, is_active: 'true' }))
@@ -88,7 +96,12 @@ export function Home() {
             console.log(error);
         } finally {
             setIsLoading(false)
+            setOpenModal(false)
         }
+    }
+
+    async function handleFilters(filters: FormSearch) {
+        console.log(filters);
     }
 
 
@@ -207,29 +220,39 @@ export function Home() {
                     </HStack>
                 </VStack>
 
+                {Products.length == 0 ?
 
-                <FlatList
-                    data={Products}
-                    keyExtractor={(item, index) => index.toString()}
-                    numColumns={2}
-                    renderItem={({ item }) => (
-                        item ?
+                    <Center flex={1}>
+                        <HStack>
 
-                            <ProductCard
-                                data={item}
-                                onPress={() => handleProduct(item.id)}
+                            <SmileyMeh color="#C4C4CC" />
+                            <Subtitle ml={2} text="Nenhum Produto Encontrado" color={'#C4C4CC'} />
+                        </HStack>
+                    </Center>
+                    :
 
-                            />
-                            :
-                            <Title text="Ops, não foi encontrado nenhum produto ainda..🤗" />
+                    <FlatList
+                        data={Products}
+                        keyExtractor={(item, index) => index.toString()}
+                        numColumns={2}
+                        renderItem={({ item }) => (
+                            item ?
 
-                    )}
-                    showsVerticalScrollIndicator={false}
-                    _contentContainerStyle={{
-                        paddingBottom: 20
-                    }}
-                />
+                                <ProductCard
+                                    data={item}
+                                    onPress={() => handleProduct(item.id)}
 
+                                />
+                                :
+                                <Title text="Ops, não foi encontrado nenhum produto ainda..🤗" />
+
+                        )}
+                        showsVerticalScrollIndicator={false}
+                        _contentContainerStyle={{
+                            paddingBottom: 20
+                        }}
+                    />
+                }
                 <Modal
                     isOpen={openModel}
                     avoidKeyboard
@@ -237,23 +260,60 @@ export function Home() {
                     size={'lg'}
                     bottom={0}
                     w={"100%"}
+
                     justifyContent={'flex-end'}
                     animationPreset="slide"
 
                 >
                     <Modal.Content
-                        w={"100%"}>
+                        w={"100%"}
+
+                    >
                         <Modal.CloseButton />
 
 
-                        <Modal.Body  >
+                        <Modal.Body       >
                             <Center>
 
                                 <Divider h={1} w={'20%'} borderRadius={2} />
                             </Center>
 
                             <Text fontWeight={'bold'} fontSize={18} color={'gray.700'} mt={8}>Filtrar anúncios</Text>
-                            <Subtitle text="Condição" mt={4} />
+
+                            <Controller
+                                control={control}
+                                name="is_new"
+                                render={({ field: { onChange, value = 'all' } }) => (
+                                    <>
+                                        <Subtitle text="Condição" mt={4} />
+                                        <Radio.Group
+                                            name="is_new"
+                                            value={value}
+                                            flex={1}
+                                            onChange={onChange}
+                                        >
+                                            <HStack>
+                                                <RadioButton
+                                                    value="all"
+                                                    title="Todos"
+
+                                                />
+                                                <RadioButton
+                                                    value="true"
+                                                    title="Novo"
+
+                                                />
+                                                <RadioButton
+                                                    value="false"
+                                                    title="Usados"
+
+                                                />
+
+                                            </HStack>
+                                        </Radio.Group>
+                                    </>)}
+                            />
+
                             <Controller
                                 control={control}
                                 name="accept_trade"
@@ -276,7 +336,7 @@ export function Home() {
                                 name="payment_methods"
                                 render={({ field: { onChange, value } }) => (
                                     <>
-                                        <Title text="Meios de pagamento aceitos" mt={3} />
+                                        <Subtitle text="Meios de pagamento aceitos" mt={3} />
 
                                         <Checkbox.Group
                                             value={value}
@@ -310,9 +370,35 @@ export function Home() {
                                 )}
                             />
 
+                            <HStack mt={2}>
 
-                            <Button  w={'100%'} type="black" >Aplicar </Button>
-                            <Input />
+                                <Button
+                                    flex={1}
+                                    type="gray"
+                                    mr={2}
+                                    onPress={() => {
+                                        handleSearchProducts({
+                                            query: null,
+                                            is_new: 'all',
+                                            accept_trade: 'false',
+                                            payment_methods: null
+                                        })
+                                    }}
+                                >
+                                    Limpar  filtros
+
+                                </Button>
+
+                                <Button
+                                    flex={1}
+                                    type="black"
+                                    onPress={handleSubmit(handleSearchProducts)}
+                                >
+                                    Aplicar
+
+                                </Button>
+                            </HStack>
+
 
                         </Modal.Body>
 

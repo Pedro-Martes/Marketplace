@@ -1,6 +1,6 @@
 import { Center, CheckIcon, FlatList, HStack, Select, VStack, Text } from "native-base";
 import { Title } from "../components/title";
-import { Check, Plus } from "phosphor-react-native";
+import { Check, Plus, SmileyMeh } from "phosphor-react-native";
 import { TouchableOpacity } from "react-native";
 import { Subtitle } from "../components/subtitle";
 import { useEffect, useState } from "react";
@@ -30,7 +30,7 @@ export function MyAdvertisement() {
             }
 
             if (filter === "Inativos") {
-               
+
                 const filteredProducts = fetchUserProducts.data.filter(newProducts => { return newProducts.is_active === false })
                 return setUserProducts(filteredProducts)
             }
@@ -56,7 +56,7 @@ export function MyAdvertisement() {
         fetchUserProducts()
     }, [filter])
 
-
+   
 
     return (
 
@@ -94,12 +94,25 @@ export function MyAdvertisement() {
                 <Loading />
                 :
 
+                userProducts.length == 0 ?
+                  
+                        <Center flex={1}>
+                            <HStack>
+            
+                                <SmileyMeh color="#C4C4CC"/>
+                                <Subtitle ml={2} text="Parece que não há nenhum anuncio cadastrado"  color={'#C4C4CC'}/>
+                            </HStack>
+                        </Center>
+                    
+                :
+
                 <FlatList
                     data={userProducts}
                     keyExtractor={(item, index) => item.id}
                     numColumns={2}
                     renderItem={({ item }) => {
-                        if (item == undefined) { return <Subtitle text="Você ainda não possui nenhum anuncio" /> }
+                        console.log(item);
+             
                         return (
                             <>
                                 <ProductCard data={item} onPress={() => handleProductCard(item.id)} />

@@ -1,31 +1,30 @@
-import { Radio as NativeRadio, IRadioProps } from 'native-base';
+import { Radio as NativeRadio, IRadioProps, Text } from 'native-base';
 import { ArrowArcLeft } from 'phosphor-react-native';
 
 type Props = IRadioProps & {
-    name: string,
-    valueList: string[],
+    
+    title?: string
 }
 
-export function Radio({ name, valueList, ...rest }: Props) {
+export function RadioButton({ title, ...rest }: Props) {
     return (
-        <NativeRadio.Group name={name} defaultValue={valueList[0]} mt={2} >
-            {valueList.map((item, index) => (
-                <NativeRadio key={index} value={item}  mt={2} 
-                _text={{ color: 'gray.500' }}
-                _icon= {{
-                    color: 'blue.primary',
-                    borderColor: 'blue.primary',
-                    size: 3,
-                }}
-                _checked={{
-                    borderColor: 'blue.primary',
-                    
-                }}
-               
-                >
-                    {item}
-                </NativeRadio>
-            ))}
-        </NativeRadio.Group>
+        <NativeRadio
+        mt={3}
+        alignItems={'center'}
+        _text={{ color: 'gray.500' }}
+        _icon={{
+            color: 'blue.primary',
+            borderColor: 'blue.primary',
+            size: 3,
+        }}
+        _checked={{
+            borderColor: 'blue.primary',
+
+        }}
+        {...rest}
+    >
+        <Text mt={3} color={'gray.400'} fontSize={16} fontFamily={'body'} mr={'20px'}>{title}</Text>
+
+    </NativeRadio>
     );
 }
