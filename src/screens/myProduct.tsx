@@ -12,6 +12,7 @@ import { ProductPropsDTO } from "../dtos/ProductDTO";
 import { Loading } from "../components/loading";
 import { AppNavigatorRoutesProps } from "../routes/app.routes";
 import { IconButton } from "../components/iconButton";
+import { ProductSkeleton } from "../components/productSkeleton";
 
 interface RouteParms {
     id: string;
@@ -66,8 +67,8 @@ export function MyProduct() {
     }
 
     async function handleEditProduct(ProductId: string){
-        navigator.navigate('CreateNewAdvertisement', {
-            id: ProductId
+        navigator.navigate('UpdateAd', {
+            propsId: ProductId
         })
     }
 
@@ -83,7 +84,7 @@ export function MyProduct() {
 
     if (isLoading) {
         return (
-            <Loading />
+            <ProductSkeleton />
         )
     }
 

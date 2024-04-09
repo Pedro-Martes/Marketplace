@@ -11,12 +11,12 @@ import { useAuth } from "../hooks/useAuth";
 import { api } from "../services/api";
 import { AppNavigatorRoutesProps } from "../routes/app.routes";
 
-
+interface PreviewProps{data: ProductPropsDTO}
 export function ProductPreview() {
     const widthScreen = Dimensions.get('window').width
     const [imageCounter, setImageCounter] = useState(1);
     const route = useRoute()
-    const Props = route.params as ProductPropsDTO
+    const {data} = route.params as PreviewProps
     const navigator = useNavigation<AppNavigatorRoutesProps>()
     const { user } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
@@ -29,19 +29,19 @@ export function ProductPreview() {
 
             const product = await api.post("/products", {
 
-                name: Props.name,
-                description: Props.description,
-                is_new: Props.is_new,
-                price: Props.price,
-                accept_trade: Props.accept_trade,
-                payment_methods: Props.payment_methods,
+                name: data.name,
+                description: data.description,
+                is_new: data.is_new,
+                price: data.price,
+                accept_trade: data.accept_trade,
+                payment_methods: data.payment_methods,
             })
 
             //Upload Image
             
             
             const ImagesData = new FormData();
-            Props.product_images.forEach((image) => {
+            data.product_images.forEach((image) => {
                 const ImageFile = {
                     ...image,
                     name: `${user.name}_${image.name}`,
@@ -50,7 +50,7 @@ export function ProductPreview() {
             })
 
             ImagesData.append('product_id', product.data.id);
-            console.log(ImagesData);
+            
             const imageUpload = await api.post("products/images",ImagesData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -82,7 +82,7 @@ export function ProductPreview() {
 
                 <Center>
                     <FlatList
-                        data={Props.product_images}
+                        data={data.product_images}
                         keyExtractor={(item, index) => index.toString()}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
@@ -130,24 +130,24 @@ export function ProductPreview() {
                     </HStack>
 
                     <View bg={'gray.250'} rounded={'full'} w={'20%'} mt={8}>
-                        <Text textAlign={'center'}>{Props.is_new ? 'Novo' : 'Usado'}</Text>
+                        <Text textAlign={'center'}>{data.is_new ? 'Novo' : 'Usado'}</Text>
                     </View>
 
                     <HStack >
 
-                        <Title text={Props.name} flex={1} fontSize={20} />
-                        <Text fontSize={20} fontWeight={'bold'} color={'blue.primary'}>R$ {Props.price}</Text>
+                        <Title text={data.name} flex={1} fontSize={20} />
+                        <Text fontSize={20} fontWeight={'bold'} color={'blue.primary'}>R$ {data.price}</Text>
 
                     </HStack>
 
-                    <Subtitle text={`${Props.description}`} mt={3} />
+                    <Subtitle text={`${data.description}`} mt={3} />
                     <HStack mt={8} mb={4}>
                         <Subtitle text="Aceita Troca?" fontWeight={'bold'} mr={2} />
-                        <Subtitle text={Props.accept_trade ? 'Sim' : 'Não'} />
+                        <Subtitle text={data.accept_trade ? 'Sim' : 'Não'} />
                     </HStack>
 
                     <Subtitle text="Meios de Pagamento:" fontWeight={'bold'} />
-                    {Props.payment_methods.includes('boleto') ?
+                    {data.payment_methods.includes('boleto') ?
                         <HStack mt={2} alignItems={'center'}>
                             <Barcode size={18} />
                             <Subtitle text="Boleto" ml={1} />
@@ -155,7 +155,7 @@ export function ProductPreview() {
                         : null
                     }
 
-                    {Props.payment_methods.includes('pix') ?
+                    {data.payment_methods.includes('pix') ?
                         <HStack mt={2} alignItems={'center'}>
                             <QrCode size={18} />
                             <Subtitle text="pix" ml={1} />
@@ -163,7 +163,7 @@ export function ProductPreview() {
                         : null
                     }
 
-                    {Props.payment_methods.includes('cash') ?
+                    {data.payment_methods.includes('cash') ?
                         <HStack mt={2} alignItems={'center'}>
                             <Money size={18} />
                             <Subtitle text="Dinheiro" ml={1} />
@@ -171,7 +171,7 @@ export function ProductPreview() {
                         : null
                     }
 
-                    {Props.payment_methods.includes('card') ?
+                    {data.payment_methods.includes('card') ?
                         <HStack mt={2} alignItems={'center'}>
                             <CreditCard size={18} />
                             <Subtitle text="Cartão de Crédito" ml={1} />

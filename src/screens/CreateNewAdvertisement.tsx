@@ -21,9 +21,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "../routes/app.routes";
 
 
-interface RouteParms {
-    id: string;
-}
+
 
 const ProductSchema = yup.object({
     name: yup.string().required('Nome obrigatório'),
@@ -41,17 +39,14 @@ export function CreateNewAdvertisement() {
     const [imagesFiles, setImagesFiles] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(false)
     const [trade, setTrade] = useState(false);
-    const route = useRoute()
-    const { id } = route.params as RouteParms;
-    const toast = useToast()
     const navigator = useNavigation<AppNavigatorRoutesProps>()
 
     const { control, handleSubmit, formState: { errors } } = useForm<ProductPropsDTO | any>({
         resolver: yupResolver(ProductSchema),
 
     })
-    id ?
-    console.log(id) : null
+
+    
     async function handleProductPhotoSelected() {
 
         try {
@@ -213,6 +208,7 @@ export function CreateNewAdvertisement() {
                 <Controller
                     control={control}
                     name='name'
+                  
                     render={({ field: { onChange, value } }) => (
                         <Input
                             placeholder="Título do anúncio"

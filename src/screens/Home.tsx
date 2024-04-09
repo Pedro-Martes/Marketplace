@@ -77,7 +77,6 @@ export function Home() {
 
 
     async function handleSearchProducts(search: FormSearch) {
-        console.log(search);
         const trade = search.accept_trade === 'false' ? null : 'true'
 
         setIsLoading(true)
@@ -100,9 +99,7 @@ export function Home() {
         }
     }
 
-    async function handleFilters(filters: FormSearch) {
-        console.log(filters);
-    }
+   
 
 
 

@@ -111,8 +111,6 @@ export function MyAdvertisement() {
                     keyExtractor={(item, index) => item.id}
                     numColumns={2}
                     renderItem={({ item }) => {
-                        console.log(item);
-             
                         return (
                             <>
                                 <ProductCard data={item} onPress={() => handleProductCard(item.id)} />

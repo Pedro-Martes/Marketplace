@@ -14,6 +14,7 @@ import { ProductPreview } from "../screens/preview";
 import { ProductPropsDTO } from "../dtos/ProductDTO";
 import { MyProduct } from "../screens/myProduct";
 import { Product } from "../screens/Product";
+import { UpdateAd } from "../screens/UpdateAd";
 
 
 type AppRoutes = {
@@ -22,8 +23,12 @@ type AppRoutes = {
     logOut: undefined,
     Product: { id: string },
     MyProduct: { id: string }
-    CreateNewAdvertisement?: {id: string | null},
-    ProductPreview: ProductPropsDTO,
+    ProductPreview: {
+        data: ProductPropsDTO,
+        imagesDeleted?: string[]
+    },
+    CreateNewAdvertisement?: { propsId: string | null },
+    UpdateAd: { propsId: string },
 
 }
 
@@ -113,6 +118,11 @@ export function AppRoutes() {
                 <Screen
                     name="Product"
                     component={Product}
+                    options={{ tabBarButton: () => null }}
+                />
+                <Screen
+                    name="UpdateAd"
+                    component={UpdateAd}
                     options={{ tabBarButton: () => null }}
                 />
 

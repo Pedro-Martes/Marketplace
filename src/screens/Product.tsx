@@ -11,6 +11,7 @@ import { AppNavigatorRoutesProps } from "../routes/app.routes";
 import { api } from "../services/api";
 import { Loading } from "../components/loading";
 import { IconButton } from "../components/iconButton";
+import { ProductSkeleton } from "../components/productSkeleton";
 
 interface RouteParms {
     id: string;
@@ -50,7 +51,7 @@ export function Product() {
 
     if (isLoading) {
         return (
-            <Loading />
+            <ProductSkeleton />
         )
     }
     return (
@@ -99,7 +100,7 @@ export function Product() {
                     <HStack mt={5} alignItems={'center'}>
                         <Image
                             source={{ uri: `${api.defaults.baseURL}/images/${product!.user.avatar}` }}
-                            alt=" Avatar Image"
+                            alt="Avatar Image"
                             size={12}
                             rounded='full'
                             borderWidth={3}
