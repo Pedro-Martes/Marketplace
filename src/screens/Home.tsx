@@ -98,7 +98,7 @@ export function Home() {
     }
 
    
-console.log(user.products);
+
 
     useEffect(() => {
         fetchProducts()
