@@ -5,6 +5,7 @@ export type UserDTO = {
     name?: string;
     email?: string;
     tel?: string;
+    products?: string[]
    
 }
 

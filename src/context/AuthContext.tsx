@@ -18,18 +18,18 @@ type AuthContextProviderProps = {
     children: React.ReactNode
 }
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
-    const [user, setUser] = useState({} as UserDTO)
+    const [user, setUser] = useState<UserDTO>({} as UserDTO)
     const [isLoadingStorage, setIsLoadingStorage] = useState(true)
 
 
-    async function storageUserAndToken(userData: UserDTO, token: string) {
-        console.log(token);
+    async function storageUserAndToken(userData: UserDTO, token: string, refresh_token: string) {
+       
         try {
             api.defaults.headers.common[`Authorization`] = `Bearer ${token}`;
             setIsLoadingStorage(true)
             await storageUserSave(userData);
             console.log(token);
-            await storageAuthTokenInsert(token)
+            await storageAuthTokenInsert({ refresh_token, token})
             setUser(userData)
 
         } catch (error) {
@@ -45,9 +45,9 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         try {
             const { data } = await api.post('/sessions', { email, password })
 
-            if (data.user && data.token) {
+            if (data.user && data.token && data.refresh_token) {
 
-                storageUserAndToken(data.user, data.token)
+                storageUserAndToken(data.user, data.token, data.refresh_token);
             }
 
         } catch (error) {
@@ -61,8 +61,9 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         try {
             const userLogged = await storageUserLoad()
             const token = await storageAuthTokenGet();
-            if (userLogged) {
-                setUser(userLogged)
+
+            if (userLogged && token) {
+                storageUserAndToken(userLogged, token.token, token.refresh_token);
 
                 setIsLoadingStorage(false)
             }

@@ -50,9 +50,7 @@ export function Home() {
 
     function handleNewAd() {
 
-        navigation.navigate('CreateNewAdvertisement', {
-            id: ''
-        });
+        navigation.navigate('CreateNewAdvertisement');
     }
 
     function handleProduct(productId: string) {
@@ -100,8 +98,7 @@ export function Home() {
     }
 
    
-
-
+console.log(user.products);
 
     useEffect(() => {
         fetchProducts()
