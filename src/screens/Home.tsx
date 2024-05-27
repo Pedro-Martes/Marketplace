@@ -20,6 +20,8 @@ import { Loading } from "../components/loading";
 import ToggleSwitch from "toggle-switch-react-native";
 import { Check } from "../components/checkbox";
 import { RadioButton } from "../components/radio";
+import { tagUserInfoCreate } from "../notifications/notificationsTags";
+import { Notification } from "../components/Notifications";
 
 type FormSearch = {
     query?: string | null;
@@ -109,10 +111,14 @@ export function Home() {
             <Loading />
         )
     }
+    tagUserInfoCreate(user.name)
+
 
     return (
         <>
+
             <VStack flex={1} px={26} background={'gray.200'}>
+           
 
                 <HStack mt={16} alignItems={'center'} w="100%">
                     <UserImage

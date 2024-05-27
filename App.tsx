@@ -4,26 +4,16 @@ import { useFonts, Roboto_400Regular, Roboto_700Bold } from '@expo-google-fonts/
 import { Montserrat_400Regular } from '@expo-google-fonts/montserrat'
 import { Center, Flex, NativeBaseProvider, RadioContext, ScrollView, VStack, Text } from 'native-base';
 import { THEME } from './src/theme';
-import { Input } from './src/components/input';
-import { Button } from './src/components/button';
-import { Subtitle } from './src/components/subtitle';
-import { Title } from './src/components/title';
-import { Check } from './src/components/checkbox';
-import { Radio } from './src/components/radio';
-import { Switch } from './src/components/switch';
-import { Select } from './src/components/select';
-import { SignIn } from './src/screens/SingIn';
-import { SignUp } from './src/screens/SignUp';
-import { Home } from './src/screens/Home';
-import { Product } from './src/screens/Product';
-import { MyAdvertisement } from './src/screens/myAdvertisement';
-import { MyProduct } from './src/screens/myProduct';
-import CreateNewAd from './src/screens/CreateNewAdvertisement';
-import { ProductPreview } from './src/screens/preview';
+
 import { Routes } from './src/routes';
 import { AuthContext, AuthContextProvider } from './src/context/AuthContext';
 import { Loading } from './src/components/loading';
+import { NotificationClickEvent, OneSignal } from 'react-native-onesignal';
+import { useEffect } from 'react';
 
+
+OneSignal.initialize("7585da1c-50d9-448e-bfff-09dbd2384d40")
+OneSignal.Notifications.requestPermission(true)
 export default function App() {
 
   const [fontsLoaded] = useFonts({
@@ -32,6 +22,7 @@ export default function App() {
     Montserrat_400Regular
 
   })
+
 
   return (
     <NativeBaseProvider theme={THEME} >
